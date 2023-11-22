@@ -8,36 +8,27 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ReadingStatusRepository::class)]
 class ReadingStatus
 {
-
     #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    private ?User $user = null;
-
-    #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: Book::class)]
-    private ?Book $book = null;
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $label = null;
+    private ?string $status = null;
 
-    public function getUser(): ?User
+    public function getId(): ?int
     {
-        return $this->user;
+        return $this->id;
     }
 
-    public function getBook(): ?Book
+    public function getStatus(): ?string
     {
-        return $this->book;
+        return $this->status;
     }
 
-    public function getLabel(): ?string
+    public function setStatus(string $status): static
     {
-        return $this->label;
-    }
-
-    public function setLabel(string $label): static
-    {
-        $this->label = $label;
+        $this->status = $status;
 
         return $this;
     }
