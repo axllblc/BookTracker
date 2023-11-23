@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserFollowRepository;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -26,24 +27,31 @@ class UserFollow
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $followingUser = null;
+    private ?User $followingUser;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $followedUser = null;
+    private ?User $followedUser;
 
     /**
-     * @var \DateTimeInterface|null Date when {@link followingUser} requested to follow {@link followedUser}.
+     * @var DateTimeInterface|null Date when {@link followingUser} requested to follow {@link followedUser}.
      */
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $requestDate = null;
+    private ?DateTimeInterface $requestDate = null;
 
     /**
-     * @var \DateTimeInterface|null Date when {@link followedUser} accepted {@link followingUser}'s request.
+     * @var DateTimeInterface|null Date when {@link followedUser} accepted {@link followingUser}'s invitation.
      * If {@link followedUser}'s profile is private, this value is null until this request is accepted.
      */
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true, options: ['default' => null])]
-    private ?\DateTimeInterface $acceptedAt = null;
+    private ?DateTimeInterface $acceptedAt = null;
+
+
+    public function __construct(User $followingUser, User $followedUser)
+    {
+        $this->followingUser = $followingUser;
+        $this->followedUser = $followedUser;
+    }
 
     public function getId(): ?int
     {
@@ -74,30 +82,33 @@ class UserFollow
         return $this;
     }
 
-    public function getRequestDate(): ?\DateTimeInterface
+    public function getRequestDate(): ?DateTimeInterface
     {
         return $this->requestDate;
     }
 
-    public function setRequestDate(\DateTimeInterface $requestDate): static
+    public function setRequestDate(DateTimeInterface $requestDate): static
     {
         $this->requestDate = $requestDate;
 
         return $this;
     }
 
-    public function getAcceptedAt(): ?\DateTimeInterface
+    public function getAcceptedAt(): ?DateTimeInterface
     {
         return $this->acceptedAt;
     }
 
-    public function setAcceptedAt(?\DateTimeInterface $acceptedAt): static
+    public function setAcceptedAt(?DateTimeInterface $acceptedAt): static
     {
         $this->acceptedAt = $acceptedAt;
 
         return $this;
     }
 
+    /**
+     * @return bool true if {@link followedUser} accepted {@link followingUser}'s invitation, false otherwise.
+     */
     public function isAccepted(): bool
     {
         return !is_null($this->acceptedAt);
