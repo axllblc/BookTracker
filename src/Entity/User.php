@@ -58,9 +58,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Book::class)]
     private Collection $books;
 
+
     public function __construct()
     {
         $this->books = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return "#$this->id – $this->username ($this->email)";
     }
 
     /**
@@ -74,7 +80,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->blocked = false;
         $this->public = false;
     }
-
 
     public function getId(): ?int
     {
