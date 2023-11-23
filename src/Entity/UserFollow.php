@@ -13,6 +13,10 @@ use Doctrine\ORM\Mapping as ORM;
  * This relationship is unidirectional: if a user A follows a user B, A is not necessarily followed by B.
  */
 #[ORM\Entity(repositoryClass: UserFollowRepository::class)]
+#[ORM\UniqueConstraint(
+    name: 'user_follow_unique',
+    columns: ['following_user_id', 'followed_user_id']
+)]
 class UserFollow
 {
     #[ORM\Id]
