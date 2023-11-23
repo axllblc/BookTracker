@@ -47,7 +47,7 @@ class UserFollow
     private ?DateTimeInterface $acceptedAt = null;
 
 
-    public function __construct(User $followingUser, User $followedUser)
+    public function __construct(?User $followingUser = null, ?User $followedUser = null)
     {
         $this->followingUser = $followingUser;
         $this->followedUser = $followedUser;
