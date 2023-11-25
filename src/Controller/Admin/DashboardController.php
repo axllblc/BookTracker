@@ -2,6 +2,9 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Author;
+use App\Entity\Book;
+use App\Entity\Review;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -28,10 +31,19 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         return [
+
             MenuItem::linkToDashboard('Dashboard', 'fa fa-home'),
 
+            // Section users
             MenuItem::section('Users'),
             MenuItem::linkToCrud('Users', 'fa fa-user', User::class),
+
+            // Section books
+            MenuItem::section('Books'),
+            MenuItem::linkToCrud('Books', 'fas fa-book', Book::class),
+            MenuItem::linkToCrud('Authors', 'fa fa-user', Author::class),
+            MenuItem::linkToCrud('Reviews', 'fas fa-star-half-stroke', Review::class),
+
         ];
     }
 }
