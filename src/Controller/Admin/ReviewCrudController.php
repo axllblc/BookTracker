@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Review;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -22,6 +23,12 @@ class ReviewCrudController extends AbstractCrudController
     {
         return [
             TextEditorField::new('review'),
+
+            AssociationField::new('user')
+                ->autocomplete(),
+
+            AssociationField::new('book')
+                ->autocomplete(),
 
             DateTimeField::new('date')
                 ->hideOnForm(),

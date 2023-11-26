@@ -35,7 +35,6 @@ class UserCrudController extends AbstractCrudController
             EmailField::new('email')
                 ->setDisabled(),
 
-
             DateTimeField::new('registrationDate')
                 ->hideOnForm(),
 
