@@ -48,6 +48,26 @@ class Review
         return $this->id;
     }
 
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): void
+    {
+        $this->user = $user;
+    }
+
+    public function getBook(): ?Book
+    {
+        return $this->book;
+    }
+
+    public function setBook(?Book $book): void
+    {
+        $this->book = $book;
+    }
+
     public function getReview(): ?string
     {
         return $this->review;
