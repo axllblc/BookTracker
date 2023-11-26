@@ -1,12 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Sign in{% endblock %}
 
 {% block body %}
-<form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+<form method="post" class="auth-container">
 
     {% if app.user %}
         <div class="mb-3">
@@ -14,18 +11,46 @@
         </div>
     {% endif %}
 
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputEmail">Email</label>
-    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+    <h1 class="h3 mb-3 font-weight-normal">Sign in</h1>
+
+    {% if error %}
+        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    <div class="mb-3">
+        <label for="inputEmail">Email</label>
+        <input type="email"
+               value="{{ last_username }}"
+               name="email" id="inputEmail"
+               class="form-control"
+               autocomplete="email"
+               required
+               autofocus>
+    </div>
+    <div class="mb-3">
+        <label for="inputPassword">Password</label>
+        <div class="toggle-password-container">
+            <input type="password"
+                   name="password" id="inputPassword"
+                   class="form-control"
+                   autocomplete="current-password"
+                   required
+                    {{ stimulus_controller('symfony/ux-toggle-password/toggle-password', {
+                        buttonClasses: ['toggle-password-button'],
+                    }) }}>
+        </div>
+    </div>
 
     <input type="hidden" name="_csrf_token"
            value="{{ csrf_token('authenticate') }}"
     >
 
-    <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
-    </button>
+    <div class="d-grid gap-2">
+        <button class="btn btn-lg btn-primary col" type="submit">
+            Sign in
+        </button>
+
+        <a class="btn btn-link" href="{{ path('app_register') }}">Register</a>
+    </div>
 </form>
 {% endblock %}

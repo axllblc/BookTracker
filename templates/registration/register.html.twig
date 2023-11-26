@@ -3,17 +3,25 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+    <div class="auth-container">
+        <h1>Register</h1>
 
-    {{ form_errors(registrationForm) }}
+        {{ form_errors(registrationForm) }}
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.username) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
+        {{ form_start(registrationForm) }}
+            {{ form_row(registrationForm.email) }}
+            {{ form_row(registrationForm.username) }}
+            {{ form_row(registrationForm.plainPassword, {
+                label: 'Password'
+            }) }}
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+            <div class="d-grid gap-2">
+                <button class="btn btn-lg btn-primary col" type="submit">
+                    Register
+                </button>
+
+                <a class="btn btn-link" href="{{ path('app_login') }}">Sign in</a>
+            </div>
+        {{ form_end(registrationForm) }}
+    </div>
 {% endblock %}
