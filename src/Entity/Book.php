@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
+#[Vich\Uploadable]
 class Book
 {
     #[ORM\Id]
@@ -232,12 +233,12 @@ class Book
         return $this;
     }
 
-    public function getProfilePictureFile(): ?File
+    public function getCoverPictureFile(): ?File
     {
         return $this->coverPictureFile;
     }
 
-    public function setProfilePictureFile(?File $coverPictureFile): void
+    public function setCoverPictureFile(?File $coverPictureFile): void
     {
         $this->coverPictureFile = $coverPictureFile;
 
