@@ -7,6 +7,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 class Book
@@ -30,6 +33,14 @@ class Book
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $coverPicture = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $coverPictureUpdate = null;
+
+    #[Vich\UploadableField(mapping: 'book_cover', fileNameProperty: 'coverPicture')]
+    #[Assert\File(maxSize: "10M")]
+    #[Assert\Image]
+    private ?File $coverPictureFile = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $editor = null;
@@ -219,5 +230,31 @@ class Book
         }
 
         return $this;
+    }
+
+    public function getProfilePictureFile(): ?File
+    {
+        return $this->coverPictureFile;
+    }
+
+    public function setProfilePictureFile(?File $coverPictureFile): void
+    {
+        $this->coverPictureFile = $coverPictureFile;
+
+        if ($coverPictureFile != null) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->coverPictureUpdate = new \DateTime();
+        }
+    }
+
+    public function getCoverPictureUpdate(): ?\DateTimeInterface
+    {
+        return $this->coverPictureUpdate;
+    }
+
+    public function setCoverPictureUpdate(?\DateTimeInterface $coverPictureUpdate): void
+    {
+        $this->coverPictureUpdate = $coverPictureUpdate;
     }
 }
