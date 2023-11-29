@@ -8,13 +8,17 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 #[ORM\HasLifecycleCallbacks]
+#[Vich\Uploadable]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -51,6 +55,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $profilePicture = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $profilePictureUpdate = null;
+
+    #[Vich\UploadableField(mapping: 'user_profile', fileNameProperty: 'profilePicture')]
+    #[Assert\File(maxSize: "5M")]
+    #[Assert\Image]
+    private ?File $profilePictureFile = null;
 
     #[ORM\Column(options: ['default' => false])]
     private ?bool $public = null;
@@ -257,5 +269,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->books->removeElement($book);
 
         return $this;
+    }
+
+    public function getProfilePictureFile(): ?File
+    {
+        return $this->profilePictureFile;
+    }
+
+    public function setProfilePictureFile(?File $profilePictureFile): void
+    {
+        $this->profilePictureFile = $profilePictureFile;
+
+        if ($profilePictureFile != null) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->profilePictureUpdate = new \DateTime();
+        }
+    }
+
+    public function getProfilePictureUpdate(): ?\DateTimeInterface
+    {
+        return $this->profilePictureUpdate;
+    }
+
+    public function setProfilePictureUpdate(?\DateTimeInterface $profilePictureUpdate): void
+    {
+        $this->profilePictureUpdate = $profilePictureUpdate;
     }
 }
