@@ -19,9 +19,9 @@ class UserCrudController extends AbstractCrudController
         return User::class;
     }
 
-
     public function configureFields(string $pageName): iterable
     {
+
         return [
             IntegerField::new('id')
                 ->hideOnForm(),
@@ -32,8 +32,7 @@ class UserCrudController extends AbstractCrudController
 
             BooleanField::new('blocked'),
 
-            EmailField::new('email')
-                ->setDisabled(),
+            EmailField::new('email'),
 
             DateTimeField::new('registrationDate')
                 ->hideOnForm(),
