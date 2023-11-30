@@ -8,10 +8,14 @@ use App\Service\BookService;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Vich\UploaderBundle\Form\Type\VichFileType;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class BookCrudController extends AbstractCrudController
 {
@@ -37,17 +41,28 @@ class BookCrudController extends AbstractCrudController
 
             TextField::new('isbn'),
 
-            DateTimeField::new('publication'),
+            DateField::new('publication'),
 
-            TextField::new('coverPicture'),
+            ImageField::new('coverPicture')
+                ->setBasePath('images/profiles')
+                ->setUploadDir('public/images/profiles'),
 
             TextField::new('editor'),
 
-            DateTimeField::new('addedAt'),
-            AssociationField::new('addedBy'),
+            DateTimeField::new('addedAt')
+                ->hideOnForm(),
 
-            DateTimeField::new('lastEditAt'),
-            AssociationField::new('lastEditBy'),
+            AssociationField::new('addedBy')
+                ->setDisabled()
+                ->hideOnForm(),
+
+            DateTimeField::new('lastEditAt')
+                ->setDisabled()
+                ->hideOnForm(),
+
+            AssociationField::new('lastEditBy')
+                ->setDisabled()
+                ->hideOnForm(),
 
             AssociationField::new('genre'),
 
