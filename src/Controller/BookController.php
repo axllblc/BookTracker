@@ -12,11 +12,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class BookController extends AbstractController
 {
+
     #[Route('/book/{id}', name: 'app_book')]
     public function index(Book $book, ReviewService $reviewService): Response
     {
         return $this->render('book/index.html.twig', [
-            'controller_name' => 'BookController',
             'book' => $book,
             'averageScore' => $reviewService->averageScoreBook($book),
         ]);
