@@ -26,7 +26,7 @@ class Review
     #[ORM\ManyToOne(targetEntity: Book::class)]
     private ?Book $book = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, length: 255, nullable: true)]
     private ?string $review = null;
 
     #[ORM\Column(nullable: true)]
