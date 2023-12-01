@@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
@@ -34,6 +35,11 @@ class ReviewCrudController extends AbstractCrudController
             AssociationField::new('book')
                 ->formatValue(fn (Book $book, $review) =>
                     $book->getTitle()
+                ),
+
+            IntegerField::new('score')
+                ->formatValue(fn ($value, Review $review) =>
+                    $review->getScore()
                 ),
 
             DateTimeField::new('date')

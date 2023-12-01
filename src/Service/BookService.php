@@ -4,13 +4,24 @@ namespace App\Service;
 
 use App\Entity\Author;
 use App\Entity\Book;
+use App\Repository\BookRepository;
+use App\Repository\UserRepository;
 use function PHPUnit\Framework\callback;
 
 class BookService
 {
 
-    public function __construct()
+    public function __construct(
+        private readonly BookRepository $bookRepository,
+        private readonly UserRepository $userRepository,
+    )
     {
+    }
+
+    public function averageScore(Book $book): float
+    {
+
+        return 0;
     }
 
     public function mapAuthorsToString(Book $book): string
