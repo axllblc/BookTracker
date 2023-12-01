@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ user.username }}{% endblock %}
+
+{% block body %}
+    <h1>{{ user.username }}</h1>
+
+    {% if user.username == app.user.username %}
+        <a href="{{ path('app_user_profile_edit', {'id': user.id}) }}">Edit my profile</a>
+    {% endif %}
+
+    {% if user.username == app.user.username %}
+        {% if user.blocked %}
+            <p>Your account is blocked.</p>
+        {% elseif not user.public %}
+            <p>Your profile page is not public.</p>
+        {% endif %}
+        {{ _self.user_profile(user) }}
+    {% elseif user.blocked %}
+        <p>This user is blocked.</p>
+    {% elseif not user.public %}
+        <p>This user profile is not public.</p>
+    {% else %}
+        {{ _self.user_profile(user) }}
+    {% endif %}
+{% endblock %}
+
+{% macro user_profile(user) %}
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Profile picture</th>
+                <td>
+                    {% if user.profilePicture == null %}
+                        <span>Pas d'image de profil</span>
+                    {% else %}
+                        <img src="{{ vich_uploader_asset(user, 'profilePictureFile') }}" alt="{{ user.username }}'s user profile">
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ user.description }}</td>
+            </tr>
+            <tr>
+                <th>Joined</th>
+                <td>{{ user.registrationDate ? user.registrationDate|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Last seen</th>
+                <td>{{ user.lastLoginDate ? user.lastLoginDate|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endmacro %}
