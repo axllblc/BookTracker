@@ -18,12 +18,6 @@ class BookService
     {
     }
 
-    public function averageScore(Book $book): float
-    {
-
-        return 0;
-    }
-
     public function mapAuthorsToString(Book $book): string
     {
         $getNameFunction = fn (Author $author) => $author->getName();
