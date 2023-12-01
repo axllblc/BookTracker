@@ -1,0 +1,21 @@
+<div class="book_card">
+    {% if book.coverPicture is not null %}
+        <img class="book_card__cover"
+             src="{{ vich_uploader_asset(book) }}"
+             alt="{{ book.title }}">
+    {% else %}
+        <div class="book_card__cover book_card__cover--placeholder"></div>
+    {% endif %}
+
+    <div class="book_card__content">
+        <div class="h4">{{ book.title }}</div>
+        <div>
+            {% for author in book.authors %}
+                {{ author.name }}{{ not loop.last ? ', ' }}
+            {% endfor %}
+        </div>
+    </div>
+
+    {% block book_card_extra %}
+    {% endblock %}
+</div>
