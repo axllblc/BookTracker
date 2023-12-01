@@ -16,10 +16,13 @@ class BookController extends AbstractController
     #[Route('/book/{id}', name: 'app_book')]
     public function index(Book $book, ReviewService $reviewService): Response
     {
+
         return $this->render('book/index.html.twig', [
             'book' => $book,
             'averageScore' => $reviewService->averageScoreBook($book),
+            'reviews' => $reviewService->findAllVisibleReviewsFromBook($book)
         ]);
+
     }
 
 }

@@ -92,7 +92,7 @@ class Review
         return $this;
     }
 
-    public function getEmotion(): ?int
+    public function getEmotion(): ?Emotion
     {
         return $this->emotion;
     }

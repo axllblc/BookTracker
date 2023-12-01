@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Book;
+use App\Entity\Review;
 use App\Repository\ReviewRepository;
 
 class ReviewService
@@ -11,6 +12,18 @@ class ReviewService
         private readonly ReviewRepository $reviewRepository,
     )
     {
+    }
+
+    /**
+     * Find all visible reviews corresponding to the book set as parameter.
+     *
+     * @param Book $book
+     * @return array
+     */
+    public function findAllVisibleReviewsFromBook(Book $book): array
+    {
+        $reviews = $this->reviewRepository->findReviewsByBook($book);
+        return array_filter($reviews, fn (Review $review) => $review->isVisible());
     }
 
     /**
