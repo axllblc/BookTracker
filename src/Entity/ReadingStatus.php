@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Enum\ReadingStatusEnum;
 use App\Repository\ReadingStatusRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,19 +15,19 @@ class ReadingStatus
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $status = null;
+    private ?ReadingStatusEnum $status = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getStatus(): ?string
+    public function getStatus(): ?ReadingStatusEnum
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): static
+    public function setStatus(ReadingStatusEnum $status): static
     {
         $this->status = $status;
 

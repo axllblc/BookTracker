@@ -47,9 +47,11 @@ class Read
         return $this->status;
     }
 
-    public function setStatus(?ReadingStatus $status): void
+    public function setStatus(ReadingStatus $status): static
     {
         $this->status = $status;
+
+        return $this;
     }
 
 
