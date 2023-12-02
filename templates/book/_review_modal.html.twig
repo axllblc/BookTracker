@@ -10,7 +10,7 @@
                 {{ include('book/_review.html.twig', { review : userReview }) }}
             </div>
             <div class="modal-footer">
-                <a href="{{ path('app_book_remove_review', { 'id' : book.id }) }}" type="button" class="btn btn-danger" data-bs-dismiss="modal">Remove</a>
+                <a href="{{ path('app_book_remove_review', { 'id' : book.id }) }}" type="button" class="btn btn-danger">Remove</a>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>

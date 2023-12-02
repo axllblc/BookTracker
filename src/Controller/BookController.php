@@ -26,8 +26,8 @@ class BookController extends AbstractController
                           ReviewService $reviewService): Response
     {
 
-        $review = $reviewService->getCurrentUserReviewedBook($book);
-        $review = $review == null ? new Review() : $review;
+        $userReview = $reviewService->getCurrentUserReviewedBook($book);
+        $review = $userReview == null ? new Review() : $userReview;
         $reviewForm = $this->createForm(ReviewType::class, $review);
 
         $userService->onUserExist(fn (User $user) => $review
@@ -44,8 +44,7 @@ class BookController extends AbstractController
 
         return $this->render('book/index.html.twig', [
             'book' => $book,
-            'hasReview' => $review != null,
-            'userReview' => $review,
+            'userReview' => $userReview,
             'reviewForm' => $reviewForm->createView(),
             'read' => $readService->getReadFromBookAndUser($book, $userService->getUser()),
             'currentUser' => $userService->getUser(),
@@ -55,11 +54,9 @@ class BookController extends AbstractController
         ]);
     }
 
-
     #[Route('/book/{id}/remove_review', name: 'app_book_remove_review', methods: ['GET'])]
     public function removeReview(Book $book, ReviewService $reviewService): Response
     {
-        dd($book);
         $reviewService->remove($book);
         return $this->redirectToRoute('app_book', [ 'id' => $book->getId() ], Response::HTTP_SEE_OTHER);
     }

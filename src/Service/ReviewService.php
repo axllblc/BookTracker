@@ -67,11 +67,14 @@ class ReviewService
         $this->entityManager->flush();
     }
 
-    public function remove(Book $book)
+    public function remove(Book $book): void
     {
         $user = $this->userService->getUser();
+        $review = null;
         if ($user != null) {
             $review = $this->reviewRepository->findReviewByBookAndUser($book, $user);
+        }
+        if ($review != null) {
             $this->entityManager->remove($review);
             $this->entityManager->flush();
         }
