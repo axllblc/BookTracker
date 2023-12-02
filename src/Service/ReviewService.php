@@ -4,12 +4,18 @@ namespace App\Service;
 
 use App\Entity\Book;
 use App\Entity\Review;
+use App\Repository\BookRepository;
 use App\Repository\ReviewRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class ReviewService
 {
     public function __construct(
         private readonly ReviewRepository $reviewRepository,
+        private readonly BookRepository $bookRepository,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly UserService $userService,
     )
     {
     }
@@ -43,6 +49,35 @@ class ReviewService
             $average /= count($reviewsByBook);
         }
         return $average;
+    }
+
+    public function getCurrentUserReviewedBook(Book $book): ?Review
+    {
+        $user = $this->userService->getUser();
+        if ($user != null) {
+            return $this->reviewRepository->findReviewByBookAndUser($book, $user);
+        }
+        return null;
+    }
+
+    public function sendReview(Review $review): void
+    {
+        $review->setDate(new \DateTimeImmutable());
+        $this->entityManager->persist($review);
+        $this->entityManager->flush();
+    }
+
+    public function remove(Book $book): void
+    {
+        $user = $this->userService->getUser();
+        $review = null;
+        if ($user != null) {
+            $review = $this->reviewRepository->findReviewByBookAndUser($book, $user);
+        }
+        if ($review != null) {
+            $this->entityManager->remove($review);
+            $this->entityManager->flush();
+        }
     }
 
 }

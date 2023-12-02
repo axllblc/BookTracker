@@ -2,8 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\Book;
 use App\Entity\Read;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -16,9 +19,23 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ReadRepository extends ServiceEntityRepository
 {
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Read::class);
+    }
+
+
+    public function findByBookAndUser(User $user, Book $book): ?Read
+    {
+        return $this
+            ->createQueryBuilder('r')
+            ->andWhere('r.book = :book')
+            ->andWhere('r.user = :user')
+            ->setParameter('book', $book)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
 //    /**
