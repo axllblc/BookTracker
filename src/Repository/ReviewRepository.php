@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Book;
 use App\Entity\Review;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -22,14 +23,24 @@ class ReviewRepository extends ServiceEntityRepository
         parent::__construct($registry, Review::class);
     }
 
+    public function findReviewByBookAndUser(Book $book, User $user): ?Review
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.book = :book')
+            ->andWhere('r.user = :user')
+            ->setParameter('book', $book)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function findReviewsByBook(Book $book): array
     {
         return $this->createQueryBuilder('r')
             ->andWhere('r.book = :book')
             ->setParameter('book', $book)
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
 
 //    /**

@@ -1,0 +1,18 @@
+
+<div class="modal fade" id="showReviewModal" tabindex="-1" aria-labelledby="showReviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <p class="modal-title h5" id="showReviewModalLabel">My Review</p>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {{ include('book/_review.html.twig', { review : userReview }) }}
+            </div>
+            <div class="modal-footer">
+                <a href="{{ path('app_book_remove_review', { 'id' : book.id }) }}" type="button" class="btn btn-danger" data-bs-dismiss="modal">Remove</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -5,22 +5,31 @@ namespace App\Service;
 use App\Entity\Book;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserService
 {
 
     public function __construct(
-        private readonly UserRepository $userRepository
+        private readonly UserRepository $userRepository,
+        private readonly Security $security
     )
     {
 
     }
 
-    public function mapUserInterface(?UserInterface $user): ?User
+    public function onUserExist(callable $f): void
     {
-        if ($user == null) return null;
-        return $this->userRepository->findByEmail($user->getUserIdentifier());
+        if ($this->security->getUser() != null) {
+            $f($this->getUser());
+        }
+    }
+
+    public function getUser(): ?User
+    {
+        if ($this->security->getUser() == null) return null;
+        return $this->userRepository->findByEmail($this->security->getUser()->getUserIdentifier());
     }
 
 }

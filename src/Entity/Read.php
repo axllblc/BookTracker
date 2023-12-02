@@ -42,6 +42,20 @@ class Read
         return $this->book;
     }
 
+    public function setBook(?Book $book): static
+    {
+        $this->book = $book;
+
+        return $this;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
     public function getStatus(): ?ReadingStatus
     {
         return $this->status;

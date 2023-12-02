@@ -9,8 +9,5 @@ import 'bootstrap';
 // any CSS you import will output into a single css file (app.scss in this case)
 import './styles/app.scss';
 
-const $ = require("jquery");
-
-require('bootstrap-star-rating');
-require('bootstrap-star-rating/css/star-rating.css');
-require('bootstrap-star-rating/themes/krajee-svg/theme.css');
+// require jQuery normally
+const $ = require('jquery');

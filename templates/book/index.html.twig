@@ -11,30 +11,45 @@
                  alt="{{ book.title }}"
                  class="img-fluid img-thumbnail mx-auto d-block rounded shadow-sm"
                  style="max-width: 100%; max-height: 500px;">
-            <div class="shadow-sm rounded p-3 mb-2 bg-light text-center">
-                <div class="row">
-
-                </div>
-                <div class="dropdown row border-top border-3">
-
-                    <div class="dropdown">
-
-                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            {% if read is null %}
-                                Add to My list
-                            {% else %}
+            <div class="shadow-sm rounded p-3 mb-2 text-center">
+                <div class="row border-3">
+                    {% if read is not null %}
+                        <div class="dropdown">
+                            <a class="btn btn-secondary dropdown-toggle w-50" type="button" data-bs-toggle="dropdown" >
                                 {{ read.status.status.value }}
+                            </a>
+                            <ul class="dropdown-menu w-50">
+                                <li><a class="dropdown-item text-center" href="{{ path('app_book_reading', {'id':book.id} ) }}">Reading</a></li>
+                                <li><a class="dropdown-item text-center" href="{{ path('app_book_completed', {'id':book.id} ) }}">Completed</a></li>
+                                <li><a class="dropdown-item text-center" href="{{ path('app_book_drop', {'id':book.id} ) }}">Drop</a></li>
+                                <li><a class="dropdown-item text-center" href="{{ path('app_book_plan_to_read', {'id':book.id} ) }}">Plan to Read</a></li>
+                                <li><a class="dropdown-item bg-danger text-center" href="{{ path('app_book_remove', {'id':book.id} ) }}">Remove</a></li>
+                            </ul>
+                        </div>
+                        <div class="mt-2">
+                            {% if hasReview is null %}
+                                <button type="button" class="btn btn-secondary w-50" data-bs-toggle="modal" data-bs-target="#makeReviewModal">
+                                    Add A Review
+                                </button>
+                                {{ include('book/_modal_form_review.html.twig') }}
+                            {% else %}
+                                <button type="button" class="btn btn-secondary w-25" data-bs-toggle="modal" data-bs-target="#showReviewModal">
+                                    Show My Review
+                                </button>
+                                {{ include('book/_review_modal.html.twig') }}
+                                <button type="button" class="btn btn-secondary w-25" data-bs-toggle="modal" data-bs-target="#makeReviewModal">
+                                    Edit Review
+                                </button>
+                                {{ include('book/_modal_form_review.html.twig') }}
                             {% endif %}
-                        </button>
-
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{ path('app_book_reading', {'id':book.id} ) }}">Reading</a></li>
-                            <li><a class="dropdown-item" href="{{ path('app_book_completed', {'id':book.id} ) }}">Completed</a></li>
-                            <li><a class="dropdown-item" href="{{ path('app_book_drop', {'id':book.id} ) }}">Drop</a></li>
-                            <li><a class="dropdown-item" href="{{ path('app_book_plan_to_read', {'id':book.id} ) }}">Plan to Read</a></li>
-                        </ul>
-
-                    </div>
+                        </div>
+                    {% else %}
+                        <div>
+                            <a href="{{ path('app_book_add', {'id':book.id} ) }}" class="btn btn-secondary w-50" type="button" aria-expanded="false">
+                                Add to My list<i class="fa fa-plus"></i>
+                            </a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -53,11 +68,11 @@
             </p>
             <div class="shadow-sm card">
                 <div class="card-header">
-                    Authors
+                    <strong>Authors</strong>
                 </div>
                 <ul class="list-group list-group-flush">
                     {% for author in book.authors %}
-                        <li class="px-4 list-group-item"> {{ author.name }} </li>
+                        <li class="px-4 list-group-item bg-light"> {{ author.name }} </li>
                     {% endfor %}
                 </ul>
             </div>
@@ -67,28 +82,10 @@
 
     <div class="pt-5 container">
         {% for review in reviews %}
-            <div class="row shadow-sm rounded p-3 mb-2 bg-light">
-                <div class="row">
-                    <div class="col-md-6">
-                        <p>{{ review.emotion.emoji }}
-                            Publish By
-                            <a href="" class="link-info link-underline-opacity-0">
-                                {{ review.user.username }}
-                            </a>
-                            <span>On {{ review.date | date("m/d/Y") }}</span>
-                        </p>
-                    </div>
-                    <div class="col-md-6">
-                        <p class="text-end">Score {{ review.score }} / 5</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="p-3 mb-2 border-top">{{ review.review | raw }}</div>
-                </div>
-            </div>
+            {{ include('book/_review.html.twig', { review : review } ) }}
         {% endfor %}
     </div>
 
 </div>
-
 {% endblock %}
+
