@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Contact;
+use App\Form\ContactType;
 use App\Repository\ReviewRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,9 +15,12 @@ class ContactController extends AbstractController
     #[Route('/contact', name: 'app_contact')]
     public function index(ReviewRepository $reviewrepository): Response
     {
-        dd($reviewrepository->findAll());
+
+        $contact = new Contact();
+        $form = $this->createForm(ContactType::class, $contact);
+
         return $this->render('contact/index.html.twig', [
-            'controller_name' => 'ContactController',
+            'form' => $form->createView(),
         ]);
     }
 }
