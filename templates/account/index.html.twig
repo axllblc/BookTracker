@@ -14,8 +14,8 @@
                 </div>
                 {{ form_start(emailForm) }}
                 {{ form_widget(emailForm) }}
-                {% if errorMsg %}
-                    <p class="text-danger">{{ errorMsg }}</p>
+                {% if emailErrorMsg %}
+                    <p class="text-danger">{{ emailErrorMsg }}</p>
                 {% endif %}
                 <button class="btn btn-primary mt-2">{{ button_label|default('Change email address') }}</button>
                 {{ form_end(emailForm) }}
@@ -29,6 +29,9 @@
                 </div>
                 {{ form_start(passwordForm) }}
                 {{ form_widget(passwordForm) }}
+                {% if passwordErrorMsg %}
+                    <p class="text-danger">{{ passwordErrorMsg }}</p>
+                {% endif %}
                 <button class="btn btn-primary mt-2">{{ button_label|default('Change password') }}</button>
                 {{ form_end(passwordForm) }}
             </div>

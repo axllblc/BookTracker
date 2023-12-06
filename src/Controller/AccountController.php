@@ -23,9 +23,11 @@ class AccountController extends AbstractController
             dd('Unreachable: user should be fully authentificated');
         }
 
-        $errorMsg = '';
+        $emailErrorMsg = '';
         $emailForm = $this->createForm(AccountEmailType::class, $user);
         $emailForm->handleRequest($request);
+
+        $passwordErrorMsg = '';
         $passwordForm = $this->createForm(AccountPasswordType::class, $user);
         $passwordForm->handleRequest($request);
 
@@ -39,20 +41,35 @@ class AccountController extends AbstractController
                     return $this->redirectToRoute('app_account', [], Response::HTTP_SEE_OTHER);
                 }
             } else {
-                $errorMsg = 'The email addresses do not match.';
+                $emailErrorMsg = 'The email addresses do not match.';
             }
         }
 
         if ($passwordForm->isSubmitted() && $passwordForm->isValid()) {
-            $entityManager->flush();
-            return $this->redirectToRoute('app_account', [], Response::HTTP_SEE_OTHER);
+            $currentPlainPassword = $passwordForm->get('currentPlainPassword')->getData();
+            $newPlainPassword = $passwordForm->get('newPlainPassword')->getData();
+            $newPlainPassword2 = $passwordForm->get('newPlainPassword2')->getData();
+
+            if ($passwordHasher->isPasswordValid($user, $currentPlainPassword)) {
+                if (strcmp($newPlainPassword, $newPlainPassword2) == 0) {
+                    $hash = $passwordHasher->hashPassword($user, $newPlainPassword);
+                    $user->setPassword($hash);
+
+                    $entityManager->flush();
+                    return $this->redirectToRoute('app_account', [], Response::HTTP_SEE_OTHER);
+                }
+                $passwordErrorMsg = 'New passwords do not match.';
+            } else {
+                $passwordErrorMsg = 'Current password is incorrect.';
+            }
         }
 
         return $this->render('account/index.html.twig', [
             'user' => $user,
             'emailForm' => $emailForm,
+            'emailErrorMsg' => $emailErrorMsg,
             'passwordForm' => $passwordForm,
-            'errorMsg' => $errorMsg,
+            'passwordErrorMsg' => $passwordErrorMsg,
         ]);
     }
 }
