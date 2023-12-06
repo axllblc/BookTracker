@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Serializable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -19,7 +20,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 #[ORM\HasLifecycleCallbacks]
 #[Vich\Uploadable]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, Serializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -295,5 +296,41 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setProfilePictureUpdate(?\DateTimeInterface $profilePictureUpdate): void
     {
         $this->profilePictureUpdate = $profilePictureUpdate;
+    }
+
+    public function serialize(): string
+    {
+        return serialize([
+            $this->id,
+            $this->email,
+            $this->roles,
+            $this->password,
+            $this->username,
+            $this->blocked,
+            $this->registrationDate,
+            $this->lastLoginDate,
+            $this->description,
+            $this->profilePicture,
+            $this->profilePictureUpdate,
+            $this->public,
+        ]);
+    }
+
+    public function unserialize($data): void
+    {
+        list(
+            $this->id,
+            $this->email,
+            $this->roles,
+            $this->password,
+            $this->username,
+            $this->blocked,
+            $this->registrationDate,
+            $this->lastLoginDate,
+            $this->description,
+            $this->profilePicture,
+            $this->profilePictureUpdate,
+            $this->public,
+        ) = unserialize($data);
     }
 }
