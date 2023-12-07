@@ -43,6 +43,7 @@ class UserProfileController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
+            return $this->redirectToRoute('app_user_profile', ['username' => $user->getUsername()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('user_profile/edit.html.twig', [
