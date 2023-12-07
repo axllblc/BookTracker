@@ -35,7 +35,7 @@ class UserProfileController extends AbstractController
 
         $user = $userRepository->findOneBy(['email' => $this->getUser()->getUserIdentifier()]);
         if ($user === null) {
-            dd('Unreachable: the user is authenticated but somehow they are not persisted in the database??');
+            dd('Unreachable: the user is authentificated but somehow they are not persisted in the database??');
         }
 
         $form = $this->createForm(UserProfileType::class, $user);
