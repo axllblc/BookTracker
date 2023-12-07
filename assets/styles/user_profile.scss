@@ -1,0 +1,14 @@
+.user_profile__profile_picture {
+    width: 100px;
+    height: 100px;
+
+    display: grid;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid hsla(0, 0%, 0%, 0.2);
+    border-radius: 50%;
+
+    clip-path: circle(50%);
+    text-align: center;
+}

@@ -3,10 +3,8 @@
 {% block title %}{{ user.username }}{% endblock %}
 
 {% block body %}
-    <div class="container w-50 border bg-white">
+    <div class="container w-50 border bg-white px-3 pt-3">
         {% if user.username == app.user.username %}
-            {{ _self.user_profile(user) }}
-
             {% if user.blocked %}
                 <div class="alert alert-warning" role="alert">
                     Your account is blocked and not visible.
@@ -16,6 +14,7 @@
                     Your profile page is not public.
                 </div>
             {% endif %}
+            {{ _self.user_profile(user) }}
 
         {% elseif user.blocked %}
             <div class="alert alert-warning" role="alert">
@@ -34,37 +33,39 @@
 {% endblock %}
 
 {% macro user_profile(user) %}
-    <div style="width: 100px; height: 100px; display: grid; align-items: center; justify-content: center; border: 1px solid hsla(0, 0%, 0%, 0.2); border-radius: 50%; clip-path: circle(50%); text-align: center;">
-        <img
-            class="img-fluid"
-            src="{{ vich_uploader_asset(user, 'profilePictureFile') }}"
-            alt="{{ user.username }}'s user profile"
-            onerror="this.onerror = null; this.alt = 'No profile picture';"
-        >
-    </div>
-    <div>
-        <h1 class="h2">{{ user.username }}</h1>
-    </div>
-    <div>
-        {# TODO: Set this href attribute to the reading list route. Right now, it is pointing to the wrong one. #}
-        <small><a href="{{ path('app_user_profile', {'username': user.username}) }}">Reading list</a></small>
-    </div>
-    {% if user.username == app.user.username %}
-        <div>
-            {# TODO: Set this href attribute to the 'manage account' route. Right now, it is pointing to the wrong one. #}
-            <small><a href="{{ path('app_user_profile', {'username': user.username}) }}">Manage account</a></small>
+    <div class="d-flex align-items-center px-2 py-3 mb-3">
+        <div class="user_profile__profile_picture me-3">
+            <img
+                class="img-fluid d-flex align-items-center"
+                width="100"
+                height="100"
+                src="{{ vich_uploader_asset(user, 'profilePictureFile') }}"
+                alt="{{ user.username }}'s user profile"
+                onerror="this.onerror = null; this.alt = 'No profile picture';"
+            >
+        </div>
+        <div class="me-auto">
+            <h1 class="h2">{{ user.username }}</h1>
         </div>
         <div>
-            <small><a href="{{ path('app_user_profile_edit') }}">Edit profile</a></small>
+            {# TODO: Set this href attribute to the reading list route. Right now, it is pointing to the wrong one. #}
+            <small><a class="text-decoration-none btn btn-link" href="{{ path('app_user_profile', {'username': user.username}) }}">Reading list</a></small>
         </div>
-    {% endif %}
-    <div>
-        <small>Joined: {{ user.registrationDate ? user.registrationDate|date('Y-m-d H:i:s') : '' }}</small>
+        {% if user.username == app.user.username %}
+            <div>
+                <small><a class="text-decoration-none btn btn-link" href="{{ path('app_user_profile_edit') }}">Edit profile</a></small>
+            </div>
+        {% endif %}
+    </div>
+    <div class="d-flex gap-3 mb-3 text-secondary-emphasis">
+        <small>Joined: {{ user.registrationDate ? user.registrationDate|date('D, d M Y H:i:s') : '' }}</small>
+        <small>Last login: {{ user.lastLoginDate ? user.lastLoginDate|date('D, d M Y H:i:s') : '' }}</small>
     </div>
     <div>
-        <small>Last login: {{ user.lastLoginDate ? user.lastLoginDate|date('Y-m-d H:i:s') : '' }}</small>
-    </div>
-    <div>
-        <p>{{ user.description }}</p>
+        {% if user.description %}
+            <p>{{ user.description }}</p>
+        {% else %}
+            <p>This user did not set their description but they surely must be awesome!</p>
+        {% endif %}
     </div>
 {% endmacro %}
