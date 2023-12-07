@@ -15,7 +15,9 @@ class UserProfileType extends AbstractType
         $builder
             ->add('username')
             ->add('description')
-            ->add('profilePictureFile', VichImageType::class)
+            ->add('profilePictureFile', VichImageType::class, [
+                'required' => false,
+            ])
             ->add('public')
         ;
     }
