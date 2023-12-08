@@ -34,8 +34,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
 
         // Users section
-        // Allowed users: ROLE_ADMIN, ROLE_MODERATOR
-        if ($this->isGranted(RoleConstants::ROLE_MODERATOR)) {
+        // Allowed users: ROLE_ADMIN only
+        if ($this->isGranted(RoleConstants::ROLE_ADMIN)) {
             yield MenuItem::section('Users');
             yield MenuItem::linkToCrud('Users', 'fa fa-user', User::class);
         }

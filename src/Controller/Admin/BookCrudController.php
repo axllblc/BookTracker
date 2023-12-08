@@ -2,29 +2,25 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Author;
 use App\Entity\Book;
+use App\Security\RoleConstants;
 use App\Service\BookService;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use Vich\UploaderBundle\Form\Type\VichFileType;
-use Vich\UploaderBundle\Form\Type\VichImageType;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted(RoleConstants::ROLE_CONTRIBUTOR)]
 class BookCrudController extends AbstractCrudController
 {
 
     public function __construct(
         private readonly BookService $bookService,
-    )
-    {
-    }
+    ) {}
 
     public static function getEntityFqcn(): string
     {
