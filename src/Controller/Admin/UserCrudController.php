@@ -14,6 +14,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -24,6 +25,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 #[IsGranted(RoleConstants::ROLE_ADMIN)]
 class UserCrudController extends AbstractCrudController
@@ -41,13 +43,12 @@ class UserCrudController extends AbstractCrudController
     {
 
         yield IntegerField::new('id')
-                ->hideOnForm();
-
-
-        yield EmailField::new('email');
+            ->hideOnForm();
 
 
         yield TextField::new('username');
+
+        yield EmailField::new('email');
 
 
         $passwordField = TextField::new('plainPassword', 'Password')
@@ -65,6 +66,16 @@ class UserCrudController extends AbstractCrudController
                 ->setRequired(true);
 
         yield $passwordField;
+
+
+        yield TextField::new('profilePictureFile')
+            ->setFormType(VichImageType::class)
+            ->onlyOnForms();
+
+        yield ImageField::new('profilePicture')
+            ->setBasePath('/images/profiles')
+            ->setLabel(null)
+            ->hideOnForm();
 
 
         yield TextEditorField::new('description');
