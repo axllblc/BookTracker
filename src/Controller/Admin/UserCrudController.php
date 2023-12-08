@@ -3,6 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
+use Closure;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -14,6 +16,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Exception;
+use Symfony\Component\Form\Event\PostSubmitEvent;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
@@ -21,7 +25,9 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserCrudController extends AbstractCrudController
 {
-    public function __construct(private UserPasswordHasherInterface $userPasswordHasher) {}
+    public function __construct(
+        private readonly UserPasswordHasherInterface $userPasswordHasher,
+    ) {}
 
     public static function getEntityFqcn(): string
     {
@@ -30,36 +36,52 @@ class UserCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        return [
-            IntegerField::new('id')
-                ->hideOnForm(),
 
-            TextField::new('username'),
+        yield IntegerField::new('id')
+                ->hideOnForm();
 
-            TextField::new('plainPassword', 'Password')
+
+        yield EmailField::new('email');
+
+
+        yield TextField::new('username');
+
+
+        $passwordField = TextField::new('plainPassword', 'Password')
                 ->setFormType(PasswordType::class)
                 ->setFormTypeOption('mapped', false)
+                ->onlyOnForms();
+
+        if ($pageName == Crud::PAGE_EDIT)
+            $passwordField
                 ->setFormTypeOption('attr', ['placeholder' => 'No change'])
                 ->setHelp('Enter a new password to update it. Otherwise, leave this field empty.')
-                ->setRequired(false)
-                ->onlyOnForms(),
+                ->setRequired(false);
+        elseif ($pageName == Crud::PAGE_NEW)
+            $passwordField
+                ->setRequired(true);
 
-            BooleanField::new('public'),
+        yield $passwordField;
 
-            BooleanField::new('blocked'),
 
-            EmailField::new('email'),
+        yield TextEditorField::new('description');
 
-            DateTimeField::new('registrationDate')
-                ->hideOnForm(),
 
-            DateTimeField::new('lastLoginDate')
-                ->hideOnForm(),
+        yield BooleanField::new('public');
 
-            ArrayField::new('roles'),
 
-            TextEditorField::new('description'),
-        ];
+        yield BooleanField::new('blocked');
+
+
+        yield DateTimeField::new('registrationDate')
+                ->hideOnForm();
+
+        yield DateTimeField::new('lastLoginDate')
+                ->hideOnForm();
+
+
+        yield ArrayField::new('roles');
+
     }
 
 
@@ -81,15 +103,20 @@ class UserCrudController extends AbstractCrudController
         return $formBuilder->addEventListener(FormEvents::POST_SUBMIT, $this->hashPassword());
     }
 
-    private function hashPassword() {
-        return function ($event) {
+    private function hashPassword(): Closure
+    {
+        return function (PostSubmitEvent $event) {
             $form = $event->getForm();
+            $userEntity = $form->getData();
             $plainPassword = $form->get('plainPassword')->getData();
 
+            if (!$userEntity->isPasswordSet())
+                throw new Exception('A user must have a password');
+
             if (!is_null($plainPassword))
-                $form->getData()->setPassword(
+                $userEntity->setPassword(
                     $this->userPasswordHasher->hashPassword(
-                        $form->getData(),
+                        $userEntity,
                         $plainPassword
                     )
                 );
