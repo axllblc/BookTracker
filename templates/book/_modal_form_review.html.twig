@@ -1,0 +1,21 @@
+
+<!-- Modal -->
+<div class="modal fade" id="makeReviewModal" tabindex="-1" aria-labelledby="makeReviewModalLabel" aria-hidden="true">
+    {{ form_start(reviewForm) }}
+    <div class="modal-dialog  modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <p class="modal-title h5" id="makeReviewModalLabel">New Review</p>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {{ form_widget(reviewForm) }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Send Review</button>
+            </div>
+        </div>
+    </div>
+    {{ form_end(reviewForm) }}
+</div>

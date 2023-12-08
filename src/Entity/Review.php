@@ -26,7 +26,7 @@ class Review
     #[ORM\ManyToOne(targetEntity: Book::class)]
     private ?Book $book = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, length: 255, nullable: true)]
     private ?string $review = null;
 
     #[ORM\Column(nullable: true)]
@@ -40,7 +40,7 @@ class Review
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $date = null;
 
-    #[ORM\ManyToOne(inversedBy: 'reviews')]
+    #[ORM\ManyToOne(targetEntity: Emotion::class)]
     private ?Emotion $emotion = null;
 
     public function getId(): ?int
@@ -53,9 +53,11 @@ class Review
         return $this->user;
     }
 
-    public function setUser(?User $user): void
+    public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
     }
 
     public function getBook(): ?Book
@@ -63,9 +65,11 @@ class Review
         return $this->book;
     }
 
-    public function setBook(?Book $book): void
+    public function setBook(?Book $book): static
     {
         $this->book = $book;
+
+        return $this;
     }
 
     public function getReview(): ?string
@@ -92,12 +96,12 @@ class Review
         return $this;
     }
 
-    public function getEmotion(): ?int
+    public function getEmotion(): ?Emotion
     {
         return $this->emotion;
     }
 
-    public function setEmotion(?int $emotion): static
+    public function setEmotion(?Emotion $emotion): static
     {
         $this->emotion = $emotion;
 

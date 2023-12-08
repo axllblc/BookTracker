@@ -258,4 +258,10 @@ class Book
     {
         $this->coverPictureUpdate = $coverPictureUpdate;
     }
+
+    public function __toString(): string
+    {
+        return $this->title;
+    }
+
 }

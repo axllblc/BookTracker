@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Manage profile{% endblock %}
+
+{% block body %}
+    <div class="container w-50">
+        {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <input class="btn btn-primary" type="submit" value="Save my changes">
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

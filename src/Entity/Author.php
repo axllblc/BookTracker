@@ -7,8 +7,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AuthorRepository::class)]
+#[Vich\Uploadable]
 class Author
 {
     #[ORM\Id]
@@ -29,7 +33,12 @@ class Author
     private ?\DateTimeInterface $deathDate = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $picture = null;
+    private ?string $coverPicture = null;
+
+    #[Vich\UploadableField(mapping: 'author_profile', fileNameProperty: 'profilePicture')]
+    #[Assert\File(maxSize: "5M")]
+    #[Assert\Image]
+    private ?File $coverPictureFile = null;
 
     #[ORM\ManyToMany(targetEntity: Book::class, inversedBy: 'authors')]
     private Collection $books;
@@ -92,21 +101,27 @@ class Author
         return $this;
     }
 
-    public function getPicture(): ?string
+    public function getCoverPicture(): ?string
     {
-        return $this->picture;
+        return $this->coverPicture;
     }
 
-    public function setPicture(?string $picture): static
+    public function setCoverPicture(?string $coverPicture): void
     {
-        $this->picture = $picture;
-
-        return $this;
+        $this->coverPicture = $coverPicture;
     }
 
-    /**
-     * @return Collection<int, Book>
-     */
+    public function getCoverPictureFile(): ?File
+    {
+        return $this->coverPictureFile;
+    }
+
+    public function setCoverPictureFile(?File $coverPictureFile): void
+    {
+        $this->coverPictureFile = $coverPictureFile;
+    }
+
+
     public function getBooks(): Collection
     {
         return $this->books;
@@ -127,4 +142,10 @@ class Author
 
         return $this;
     }
+
+    public function __toString(): string
+    {
+        return $this->getName();
+    }
+
 }

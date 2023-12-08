@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="d-flex align-items-center justify-content-center vh-100">
+        <div class="text-center">
+            <h1 class="display-1 fw-bold">Error</h1>
+            <p class="fs-3"> <span class="text-danger">Opps!</span> Problem.</p>
+            <p class="lead">
+                Big problem.
+            </p>
+            <a href="{{ path('app_homepage') }}" class="btn btn-secondary">Go Home</a>
+        </div>
+    </div>
+
+{% endblock %}
