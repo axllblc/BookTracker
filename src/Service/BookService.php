@@ -22,7 +22,7 @@ class BookService
     {
         $getNameFunction = fn (Author $author) => $author->getName();
         $nameAuthorArray = array_map($getNameFunction, $book->getAuthors()->toArray());
-        return implode(',', $nameAuthorArray);
+        return implode(', ', $nameAuthorArray);
     }
 
 }

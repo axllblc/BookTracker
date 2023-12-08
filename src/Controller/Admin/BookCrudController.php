@@ -13,6 +13,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 #[IsGranted(RoleConstants::ROLE_CONTRIBUTOR)]
 class BookCrudController extends AbstractCrudController
@@ -33,17 +34,29 @@ class BookCrudController extends AbstractCrudController
         return [
 
             TextField::new('title'),
+
+            AssociationField::new('authors')
+                ->formatValue(fn($value, $book) => $this->bookService->mapAuthorsToString($book)),
+
+            AssociationField::new('genre'),
+
             TextEditorField::new('description'),
 
             TextField::new('isbn'),
 
+            TextField::new('editor'),
+
             DateField::new('publication'),
 
-            ImageField::new('coverPicture')
-                ->setBasePath('images/profiles')
-                ->setUploadDir('public/images/profiles'),
 
-            TextField::new('editor'),
+            TextField::new('coverPictureFile')
+                ->setFormType(VichImageType::class)
+                ->onlyOnForms(),
+
+            ImageField::new('coverPicture')
+                ->setBasePath('images/covers')
+                ->hideOnForm(),
+
 
             DateTimeField::new('addedAt')
                 ->hideOnForm(),
@@ -59,11 +72,6 @@ class BookCrudController extends AbstractCrudController
             AssociationField::new('lastEditBy')
                 ->setDisabled()
                 ->hideOnForm(),
-
-            AssociationField::new('genre'),
-
-            AssociationField::new('authors')
-                ->formatValue(fn($value, $book) => $this->bookService->mapAuthorsToString($book)),
 
         ];
     }
