@@ -36,7 +36,7 @@ class AuthorCrudController extends AbstractCrudController
 
             DateField::new('deathDate'),
 
-            ImageField::new('coverPicture')
+            ImageField::new('picture')
                 ->setBasePath('images/profiles')
                 ->setUploadDir('public/images/profiles'),
 
