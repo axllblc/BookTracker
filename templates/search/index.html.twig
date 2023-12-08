@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Search{% endblock %}
+
+{% block body %}
+    <div class="container w-50">
+        <div class="text-center py-5">
+            <h1 class="display-5">Explore the library</h1>
+        </div>
+        <form>
+            <div class="input-group input-group mb-3">
+                <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#filterOptions" aria-expanded="false" aria-controls="filterOptions">Filter</button>
+                <label for="search-bar" class="form-label visually-hidden">Search</label>
+                <input type="search" class="form-control" id="search-bar" name="search" placeholder="Search">
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+            <div class="collapse" id="filterOptions">
+                <div class="card card-body">
+<pre>
+TODO:
+- [] Filter by genres
+- [] Filter by authors
+- [] Filter by editors
+- [] Filter by publication date
+</pre>
+                </div>
+            </div>
+        </form>
+        <div>
+            <div class="row">
+                <div class="col py-3 d-flex flex-column gap-4">
+                    {% for book in books %}
+                        {% if loop.index % 2 == 1 %}
+                            <div class="card">
+                                <div class="card-body">
+                                    <h3 class="card-title"><a href="{{ path('app_book', { 'id': book.id }) }}">{{ book.title }}</a></h3>
+                                    <div class="card-subtitle d-flex gap-1">
+                                        {% for author in book.authors %}
+                                            <small>{{ author.name }}</small>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="card-text mt-2">{{ book.description|raw }}</div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="col py-3 d-flex flex-column gap-4">
+                    {% for book in books %}
+                        {% if loop.index % 2 == 0 %}
+                            <div class="card">
+                                <div class="card-body">
+                                    <h3 class="card-title"><a href="{{ path('app_book', { 'id': book.id }) }}">{{ book.title }}</a></h3>
+                                    <div class="card-subtitle d-flex gap-1">
+                                        {% for author in book.authors %}
+                                            <small>{{ author.name }}</small>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="card-text mt-2">{{ book.description|raw }}</div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
