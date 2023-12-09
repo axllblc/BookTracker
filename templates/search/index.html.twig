@@ -16,13 +16,57 @@
             </div>
             <div class="collapse" id="filterOptions">
                 <div class="card card-body">
-<pre>
-TODO:
-- [] Filter by genres
-- [] Filter by authors
-- [] Filter by editors
-- [] Filter by publication date
-</pre>
+                    <fieldset>
+                        <legend>Filter search</legend>
+                        <div class="mb-3">
+                            <pre>TODO: author div</pre>
+                        </div>
+                        <div class="mb-3">
+                            <label for="select-genre" class="form-label">Genre</label>
+                            <select class="form-select" id="select-genre" name="genre" aria-label="Select a genre">
+                                {% set genreid = app.request.query.get('genre') %}
+                                {% if genreid and genreid > 0 %}
+                                    <option value="0">Any</option>
+                                    {% for genre in genres %}
+                                        {% if genre.id == genreid %}
+                                            <option value="{{ genre.id }}" selected>{{ genre.label }}</option>
+                                        {% else %}
+                                            <option value="{{ genre.id }}">{{ genre.label }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    <option value="0" selected>Any</option>
+                                    {% for genre in genres %}
+                                        <option value="{{ genre.id }}">{{ genre.label }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="select-editor" class="form-label">Editor</label>
+                            <select class="form-select" id="select-editor" name="editor" aria-label="Select a editor">
+                                {% set _editor = app.request.query.get('editor') %}
+                                {% if _editor and _editor > 0 %}
+                                    <option value="0">Any</option>
+                                    {% for editor in editors %}
+                                        {% if editor == _editor %}
+                                            <option value="{{ editor }}" selected>{{ editor }}</option>
+                                        {% else %}
+                                            <option value="{{ editor }}">{{ editor }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    <option value="0" selected>Any</option>
+                                    {% for editor in editors %}
+                                        <option value="{{ editor }}">{{ editor }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <pre>TODO: publication date</pre>
+                        </div>
+                    </fieldset>
                 </div>
             </div>
         </form>
