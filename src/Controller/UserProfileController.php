@@ -18,7 +18,7 @@ class UserProfileController extends AbstractController
     {
         $user = $userRepository->findOneBy(['username' => $username]);
         if ($user === null) {
-            dd('TODO: 404');
+            throw $this->createNotFoundException();
         }
 
         return $this->render('user_profile/index.html.twig', [
