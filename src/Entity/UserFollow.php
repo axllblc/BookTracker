@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserFollowRepository;
+use DateTime;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,6 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
     name: 'user_follow_unique',
     columns: ['following_user_id', 'followed_user_id']
 )]
+#[ORM\HasLifecycleCallbacks]
 class UserFollow
 {
     #[ORM\Id]
@@ -52,6 +54,13 @@ class UserFollow
         $this->followingUser = $followingUser;
         $this->followedUser = $followedUser;
     }
+
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
+    {
+        $this->requestDate = new DateTime();
+    }
+
 
     public function getId(): ?int
     {
