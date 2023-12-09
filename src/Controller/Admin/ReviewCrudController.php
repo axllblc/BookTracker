@@ -4,7 +4,6 @@ namespace App\Controller\Admin;
 
 use App\Entity\Book;
 use App\Entity\Review;
-use App\Entity\User;
 use App\Security\RoleConstants;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -28,10 +27,7 @@ class ReviewCrudController extends AbstractCrudController
         return [
             TextEditorField::new('review'),
 
-            AssociationField::new('user')
-                ->formatValue(fn (User $user, $review) =>
-                    $user->getUsername() . ' | ' . $user->getEmail()
-                ),
+            AssociationField::new('user'),
 
             AssociationField::new('book')
                 ->formatValue(fn (Book $book, $review) =>
