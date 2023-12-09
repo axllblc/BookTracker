@@ -13,6 +13,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AuthorRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[Vich\Uploadable]
 class Author
 {
@@ -45,12 +46,29 @@ class Author
     private Collection $books;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $updatedAt = null;
+    private ?\DateTimeInterface $lastEditAt = null;
+
+
+    /**
+     * Set default values before the Author is persisted to the database.
+     */
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
+    {
+        $this->lastEditAt = new DateTime();
+    }
+
+    #[ORM\PreUpdate]
+    public function onPreUpdate(): void
+    {
+        $this->lastEditAt = new DateTime();
+    }
 
     public function __construct()
     {
         $this->books = new ArrayCollection();
     }
+
 
     public function getId(): ?int
     {
@@ -127,7 +145,7 @@ class Author
         if ($pictureFile != null) {
             // It is required that at least one field changes if you are using doctrine
             // otherwise the event listeners won't be called and the file is lost
-            $this->updatedAt = new DateTime();
+            $this->lastEditAt = new DateTime();
         }
     }
 
@@ -153,14 +171,14 @@ class Author
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getLastEditAt(): ?\DateTimeInterface
     {
-        return $this->updatedAt;
+        return $this->lastEditAt;
     }
 
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): static
+    public function setLastEditAt(?\DateTimeInterface $lastEditAt): static
     {
-        $this->updatedAt = $updatedAt;
+        $this->lastEditAt = $lastEditAt;
 
         return $this;
     }
