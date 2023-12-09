@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use DateTime;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -34,7 +36,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Seriali
     private array $roles = [];
 
     /**
-     * @var string The hashed password
+     * @var ?string The hashed password
      */
     #[ORM\Column]
     private ?string $password = null;
@@ -46,10 +48,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Seriali
     private ?bool $blocked = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $registrationDate = null;
+    private ?DateTimeInterface $registrationDate = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $lastLoginDate = null;
+    private ?DateTimeInterface $lastLoginDate = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
@@ -58,7 +60,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Seriali
     private ?string $profilePicture = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $profilePictureUpdate = null;
+    private ?DateTimeInterface $profilePictureUpdate = null;
 
     #[Vich\UploadableField(mapping: 'user_profile', fileNameProperty: 'profilePicture')]
     #[Assert\File(maxSize: "5M")]
@@ -88,8 +90,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Seriali
     #[ORM\PrePersist]
     public function onPrePersist(): void
     {
-        $this->registrationDate = new \DateTime();
-        $this->lastLoginDate = new \DateTime();
+        $this->registrationDate = new DateTime();
+        $this->lastLoginDate = new DateTime();
         $this->blocked = false;
         $this->public = false;
     }
@@ -155,6 +157,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Seriali
         return $this;
     }
 
+    public function isPasswordSet(): bool {
+        return !empty($this->password);
+    }
+
     /**
      * @see UserInterface
      */
@@ -188,24 +194,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Seriali
         return $this;
     }
 
-    public function getRegistrationDate(): ?\DateTimeInterface
+    public function getRegistrationDate(): ?DateTimeInterface
     {
         return $this->registrationDate;
     }
 
-    public function setRegistrationDate(\DateTimeInterface $registrationDate): static
+    public function setRegistrationDate(DateTimeInterface $registrationDate): static
     {
         $this->registrationDate = $registrationDate;
 
         return $this;
     }
 
-    public function getLastLoginDate(): ?\DateTimeInterface
+    public function getLastLoginDate(): ?DateTimeInterface
     {
         return $this->lastLoginDate;
     }
 
-    public function setLastLoginDate(\DateTimeInterface $lastLoginDate): static
+    public function setLastLoginDate(DateTimeInterface $lastLoginDate): static
     {
         $this->lastLoginDate = $lastLoginDate;
 
@@ -284,16 +290,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Seriali
         if ($profilePictureFile != null) {
             // It is required that at least one field changes if you are using doctrine
             // otherwise the event listeners won't be called and the file is lost
-            $this->profilePictureUpdate = new \DateTime();
+            $this->profilePictureUpdate = new DateTime();
         }
     }
 
-    public function getProfilePictureUpdate(): ?\DateTimeInterface
+    public function getProfilePictureUpdate(): ?DateTimeInterface
     {
         return $this->profilePictureUpdate;
     }
 
-    public function setProfilePictureUpdate(?\DateTimeInterface $profilePictureUpdate): void
+    public function setProfilePictureUpdate(?DateTimeInterface $profilePictureUpdate): void
     {
         $this->profilePictureUpdate = $profilePictureUpdate;
     }

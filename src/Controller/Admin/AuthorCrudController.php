@@ -3,19 +3,17 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Author;
-use App\Form\AuthorType;
+use App\Security\RoleConstants;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Form\Type\FileUploadType;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 
+#[IsGranted(RoleConstants::ROLE_CONTRIBUTOR)]
 class AuthorCrudController extends AbstractCrudController
 {
 
@@ -36,12 +34,18 @@ class AuthorCrudController extends AbstractCrudController
 
             DateField::new('deathDate'),
 
+
+            TextField::new('pictureFile')
+                ->setFormType(VichImageType::class)
+                ->onlyOnForms(),
+
             ImageField::new('picture')
-                ->setBasePath('images/profiles')
-                ->setUploadDir('public/images/profiles'),
+                ->setBasePath('images/authors')
+                ->hideOnForm(),
+
 
             AssociationField::new('books')
-                ->formatValue(fn($value, $book) => $book->getName()),
+                ->formatValue(fn($value, $author) => count($author->getBooks()) . " book(s)"),
         ];
     }
 
