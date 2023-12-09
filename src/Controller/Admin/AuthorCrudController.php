@@ -11,6 +11,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 #[IsGranted(RoleConstants::ROLE_CONTRIBUTOR)]
 class AuthorCrudController extends AbstractCrudController
@@ -33,12 +34,18 @@ class AuthorCrudController extends AbstractCrudController
 
             DateField::new('deathDate'),
 
-            ImageField::new('coverPicture')
-                ->setBasePath('images/profiles')
-                ->setUploadDir('public/images/profiles'),
+
+            TextField::new('pictureFile')
+                ->setFormType(VichImageType::class)
+                ->onlyOnForms(),
+
+            ImageField::new('picture')
+                ->setBasePath('images/authors')
+                ->hideOnForm(),
+
 
             AssociationField::new('books')
-                ->formatValue(fn($value, $book) => $book->getName()),
+                ->formatValue(fn($value, $author) => count($author->getBooks()) . " book(s)"),
         ];
     }
 
