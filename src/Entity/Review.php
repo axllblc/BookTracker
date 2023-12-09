@@ -31,7 +31,7 @@ class Review
 
     #[ORM\Column(nullable: true)]
     #[Assert\LessThanOrEqual(5)]
-    #[Assert\GreaterThanOrEqual(0)]
+    #[Assert\GreaterThan(0)]
     private ?int $score = null;
 
     #[ORM\Column(nullable: true)]
