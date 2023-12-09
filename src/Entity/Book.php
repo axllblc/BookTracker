@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\BookRepository;
+use DateTime;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -12,6 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[Vich\Uploadable]
 class Book
 {
@@ -26,17 +29,14 @@ class Book
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(length: 13, nullable: true, unique: true)]
+    #[ORM\Column(length: 13, unique: true, nullable: true)]
     private ?string $isbn = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $publication = null;
+    private ?DateTimeInterface $publication = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $coverPicture = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $coverPictureUpdate = null;
 
     #[Vich\UploadableField(mapping: 'book_cover', fileNameProperty: 'coverPicture')]
     #[Assert\File(maxSize: "10M")]
@@ -50,13 +50,13 @@ class Book
     private ?User $addedBy = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $addedAt = null;
+    private ?DateTimeInterface $addedAt = null;
 
     #[ORM\ManyToOne]
     private ?User $lastEditBy = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $lastEditAt = null;
+    private ?DateTimeInterface $lastEditAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'books')]
     private ?BookGenre $genre = null;
@@ -68,6 +68,29 @@ class Book
     {
         $this->authors = new ArrayCollection();
     }
+
+    /**
+     * Set default values before the Book is persisted to the database.
+     */
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
+    {
+        $this->addedAt = new DateTime();
+        $this->lastEditAt = new DateTime();
+    }
+
+    #[ORM\PreUpdate]
+    public function onPreUpdate(): void
+    {
+        $this->lastEditAt = new DateTime();
+    }
+
+
+    public function __toString(): string
+    {
+        return $this->title;
+    }
+
 
     public function getId(): ?int
     {
@@ -110,12 +133,12 @@ class Book
         return $this;
     }
 
-    public function getPublication(): ?\DateTimeInterface
+    public function getPublication(): ?DateTimeInterface
     {
         return $this->publication;
     }
 
-    public function setPublication(?\DateTimeInterface $publication): static
+    public function setPublication(?DateTimeInterface $publication): static
     {
         $this->publication = $publication;
 
@@ -158,12 +181,12 @@ class Book
         return $this;
     }
 
-    public function getAddedAt(): ?\DateTimeInterface
+    public function getAddedAt(): ?DateTimeInterface
     {
         return $this->addedAt;
     }
 
-    public function setAddedAt(?\DateTimeInterface $addedAt): static
+    public function setAddedAt(?DateTimeInterface $addedAt): static
     {
         $this->addedAt = $addedAt;
 
@@ -182,12 +205,12 @@ class Book
         return $this;
     }
 
-    public function getLastEditAt(): ?\DateTimeInterface
+    public function getLastEditAt(): ?DateTimeInterface
     {
         return $this->lastEditAt;
     }
 
-    public function setLastEditAt(?\DateTimeInterface $lastEditAt): static
+    public function setLastEditAt(?DateTimeInterface $lastEditAt): static
     {
         $this->lastEditAt = $lastEditAt;
 
@@ -245,23 +268,8 @@ class Book
         if ($coverPictureFile != null) {
             // It is required that at least one field changes if you are using doctrine
             // otherwise the event listeners won't be called and the file is lost
-            $this->coverPictureUpdate = new \DateTime();
+            $this->lastEditAt = new DateTime();
         }
-    }
-
-    public function getCoverPictureUpdate(): ?\DateTimeInterface
-    {
-        return $this->coverPictureUpdate;
-    }
-
-    public function setCoverPictureUpdate(?\DateTimeInterface $coverPictureUpdate): void
-    {
-        $this->coverPictureUpdate = $coverPictureUpdate;
-    }
-
-    public function __toString(): string
-    {
-        return $this->title;
     }
 
 }
