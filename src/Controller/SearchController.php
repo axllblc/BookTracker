@@ -6,6 +6,7 @@ use App\Entity\Book;
 use App\Repository\BookGenreRepository;
 use App\Repository\BookRepository;
 use App\Service\EditorService;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,10 +20,29 @@ class SearchController extends AbstractController
         $search = $request->query->get('search') ?? '';
         $genre = (int)$request->query->get('genre') ?? 0;
         $editor = $request->query->get('editor') ?? '0';
+        $dateBegin = $request->query->get('date-begin') ?? '';
+        $dateEnd = $request->query->get('date-end') ?? '';
 
-        $books = $bookRepository->findFiltered($search);
-        $books = array_filter($books, fn (Book $book) => $book->getGenre()?->getId() == $genre);
-        $books = array_filter($books, fn (Book $book) => $editor == 0 || strcmp($book->getEditor(), $editor) === 0);
+        $books = [];
+        if ($search !== '') {
+            $books = $bookRepository->findFiltered($search);
+
+            if ($genre !== 0) {
+                $books = array_filter($books, fn (Book $book) => $book->getGenre()?->getId() === $genre);
+            }
+            if ($editor !== '0') {
+                $books = array_filter($books, fn (Book $book) => $book->getEditor() === $editor);
+            }
+            if ($dateBegin !== '' || $dateEnd !== '') {
+                $dateBegin = DateTime::createFromFormat('Y-m-d', $dateBegin ?: '0000-00-00')->getTimestamp();
+                $dateEnd = DateTime::createFromFormat('Y-m-d', $dateEnd ?: date('Y-m-d'))->getTimestamp();
+
+                $books = array_filter($books, function (Book $book) use ($dateEnd, $dateBegin) {
+                    $date = $book->getPublication()?->getTimestamp();
+                    return $date !== null && $dateBegin <= $date && $date <= $dateEnd;
+                });
+            }
+        }
 
         return $this->render('search/index.html.twig', [
             'books' => $books,

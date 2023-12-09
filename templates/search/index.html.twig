@@ -63,8 +63,20 @@
                                 {% endif %}
                             </select>
                         </div>
-                        <div class="mb-3">
-                            <pre>TODO: publication date</pre>
+                        <label class="form-label">Publication date</label>
+                        <div class="row mb-3">
+                            <div class="col input-group">
+                                <label for="date-begin" class="input-group-text">From</label>
+                                <input class="form-select" type="date" id="date-begin" name="date-begin" aria-label="Select a lower bound for the publication date" value="{{ app.request.query.get('date-begin') }}">
+                            </div>
+                            <div class="col input-group">
+                                <label for="date-end" class="input-group-text">To</label>
+                                <input class="form-select" type="date" id="date-end" name="date-end" aria-label="Select an upper bound for the publication date" value="{{ app.request.query.get('date-end') }}">
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary" type="submit">Search</button>
+                            <a class="btn btn-secondary" href="{{ path('app_search') }}">Clear</a>
                         </div>
                     </fieldset>
                 </div>
