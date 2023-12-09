@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\AuthorRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -33,15 +34,18 @@ class Author
     private ?\DateTimeInterface $deathDate = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $coverPicture = null;
+    private ?string $picture = null;
 
-    #[Vich\UploadableField(mapping: 'author_profile', fileNameProperty: 'profilePicture')]
+    #[Vich\UploadableField(mapping: 'author_profile', fileNameProperty: 'picture')]
     #[Assert\File(maxSize: "5M")]
     #[Assert\Image]
-    private ?File $coverPictureFile = null;
+    private ?File $pictureFile = null;
 
     #[ORM\ManyToMany(targetEntity: Book::class, inversedBy: 'authors')]
     private Collection $books;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $updatedAt = null;
 
     public function __construct()
     {
@@ -101,24 +105,30 @@ class Author
         return $this;
     }
 
-    public function getCoverPicture(): ?string
+    public function getPicture(): ?string
     {
-        return $this->coverPicture;
+        return $this->picture;
     }
 
-    public function setCoverPicture(?string $coverPicture): void
+    public function setPicture(?string $picture): void
     {
-        $this->coverPicture = $coverPicture;
+        $this->picture = $picture;
     }
 
-    public function getCoverPictureFile(): ?File
+    public function getPictureFile(): ?File
     {
-        return $this->coverPictureFile;
+        return $this->pictureFile;
     }
 
-    public function setCoverPictureFile(?File $coverPictureFile): void
+    public function setPictureFile(?File $pictureFile): void
     {
-        $this->coverPictureFile = $coverPictureFile;
+        $this->pictureFile = $pictureFile;
+
+        if ($pictureFile != null) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new DateTime();
+        }
     }
 
 
@@ -143,9 +153,21 @@ class Author
         return $this;
     }
 
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+
     public function __toString(): string
     {
         return $this->getName();
     }
-
 }
