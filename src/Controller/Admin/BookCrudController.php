@@ -36,6 +36,7 @@ class BookCrudController extends AbstractCrudController
             TextField::new('title'),
 
             AssociationField::new('authors')
+                ->setFormTypeOption('by_reference', false)
                 ->formatValue(fn($value, $book) => $this->bookService->mapAuthorsToString($book)),
 
             AssociationField::new('genre'),

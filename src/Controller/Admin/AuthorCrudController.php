@@ -45,6 +45,7 @@ class AuthorCrudController extends AbstractCrudController
 
 
             AssociationField::new('books')
+                ->setFormTypeOption('by_reference', false)
                 ->formatValue(fn($value, $author) => count($author->getBooks()) . " book(s)"),
         ];
     }
