@@ -17,8 +17,8 @@
                     Dive into a world of stories and take control of your reading adventure today!
                 </p>
                 <div class="d-flex gap-3">
-                    <button class="btn btn-primary" type="button">Sign Up</button>
-                    <button class="btn btn-secondary" type="button">Log In</button>
+                    <a href="{{ path('app_register') }}" class="btn btn-primary">Sign Up</a>
+                    <a href="{{ path('app_login') }}" class="btn btn-secondary">Log In</a>
                 </div>
             </div>
         </div>
@@ -56,7 +56,7 @@
                                         <p class="card-text mt-1">{{ book.description|slice(0, 142) }} [...]</p>
                                         <div class="flex-grow-1"></div>
                                         <a href="{{ path('app_book', { 'id': book.id }) }}"
-                                           class="btn btn-primary mt-1" type="button">Read more</a>
+                                           class="btn btn-primary mt-1">Read more</a>
                                     </div>
                                 </div>
                             </div>
@@ -71,7 +71,7 @@
                 <div class="d-flex flex-column align-items-center">
                     <p class="fs-5 mb-4 text-center">You may as well look some books for yourself!</p>
                     <a href="{{ path('app_search') }}"
-                       class="btn btn-primary mt-1 d-block" type="button">Search in the Library</a>
+                       class="btn btn-primary mt-1 d-block">Search in the Library</a>
                 </div>
             </div>
         </div>
