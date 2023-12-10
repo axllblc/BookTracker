@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Form\UserProfileType;
 use App\Repository\UserRepository;
+use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,13 +28,13 @@ class UserProfileController extends AbstractController
     }
 
     #[Route('/profile', name: 'app_user_profile_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
+    public function edit(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, UserService $userService): Response
     {
-        if ($this->getUser() === null) {
-            dd('Unreachable: unauthentificated users should not see this route');
+        if ($this->getUser() == null) {
+            return $this->redirectToRoute('app_login');
         }
 
-        $user = $userRepository->findOneBy(['email' => $this->getUser()->getUserIdentifier()]);
+        $user = $userService->getUser();
         if ($user === null) {
             dd('Unreachable: the user is authentificated but somehow they are not persisted in the database??');
         }

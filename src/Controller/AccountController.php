@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Form\AccountEmailType;
 use App\Form\AccountPasswordType;
 use App\Repository\UserRepository;
+use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,11 +17,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class AccountController extends AbstractController
 {
     #[Route('/', name: 'app_account', methods: ['GET', 'POST'])]
-    public function index(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): Response
+    public function index(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher, UserService $userService): Response
     {
-        $user = $userRepository->findOneBy(['email' => $this->getUser()->getUserIdentifier()]);
+        if ($this->getUser() == null) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $user = $userService->getUser();
         if ($user === null) {
-            dd('Unreachable: user should be fully authentificated');
+            dd('Unreachable: the user is authentificated but somehow they are not persisted in the database??');
         }
 
         $emailErrorMsg = '';
