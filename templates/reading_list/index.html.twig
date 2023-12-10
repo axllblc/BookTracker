@@ -9,36 +9,36 @@
         <a href="{{ path('app_user_profile', { 'username': user.username }) }}" class="btn btn-primary btn-lg fw-bold">Profile</a>
     </div>
     <div class="row row-cols-lg-2 row-cols-1 row-gap-4">
-        {{ _self.dummy_book() }}
-        {{ _self.dummy_book() }}
-        {{ _self.dummy_book() }}
-        {{ _self.dummy_book() }}
-        {{ _self.dummy_book() }}
-        {{ _self.dummy_book() }}
-        {{ _self.dummy_book() }}
-        {{ _self.dummy_book() }}
-        {{ _self.dummy_book() }}
+        {% for bookWithReview in booksWithReview %}
+            {{ _self.display_book_card(bookWithReview) }}
+        {% endfor %}
     </div>
 </main>
 {% endblock %}
 
-{% macro dummy_book() %}
+{% macro display_book_card(bookWithReview) %}
+{% set book = bookWithReview[0] %}
+{% set review = bookWithReview[1] %}
 <div class="col">
     <div class="card">
         <div class="row">
             <div class="col-4 pe-0">
                 <div class="img-thumbnail border-0 border-end rounded-0 h-100 d-flex align-items-center justify-content-center">
-                    <img class="img-fluid" src="TODO: img src please I need it so badly">
+                    <img class="img-fluid" src="{{ vich_uploader_asset(book, 'coverPictureFile') }}">
                 </div>
             </div>
             <div class="col">
                 <div class="card-body">
-                    <h5 class="card-title">Book title</h5>
-                    <h6 class="card-subtitle mb-2 text-body-secondary">Genre</h6>
-                    <p class="card-text">★★★★★</p>
+                    <h5 class="card-title align-middle">{{ book.title }} <span class="ms-1">{{ review.emotion }}</span></h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">{{ book.genre ?? 'Unspecified genre' }}</h6>
+                    {% if review is null %}
+                        <p class="card-text">Score: Not reviewed yet</p>
+                    {% else %}
+                        <p class="card-text">Score: {{ review.score }}</p>
+                    {% endif %}
                     <div class="d-flex gap-3">
                         <a href="TODO: action to set status" class="btn btn-primary">Action</a>
-                        <a href="TODO: route to corresponding book page" class="btn btn-secondary">Details</a>
+                        <a href="{{ path('app_book', { 'id': book.id }) }}" class="btn btn-secondary">Details</a>
                     </div>
                 </div>
             </div>
