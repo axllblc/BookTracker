@@ -11,7 +11,7 @@
             <div class="input-group input-group mb-3">
                 <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#filterOptions" aria-expanded="false" aria-controls="filterOptions">Filter</button>
                 <label for="search-bar" class="form-label visually-hidden">Search</label>
-                <input type="search" class="form-control" id="search-bar" name="search" value="{{ app.request.query.get('search') }}" placeholder="Search">
+                <input type="search" class="form-control" id="search-bar" name="search" value="{{ app.request.query.get('search') }}" placeholder="Search" required>
                 <button class="btn btn-primary" type="submit">Search</button>
             </div>
             <div class="collapse" id="filterOptions">
