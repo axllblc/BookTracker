@@ -5,6 +5,9 @@ namespace App\Controller\Admin;
 use App\Entity\Book;
 use App\Entity\Review;
 use App\Security\RoleConstants;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
@@ -21,12 +24,24 @@ class ReviewCrudController extends AbstractCrudController
         return Review::class;
     }
 
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud->showEntityActionsInlined();
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->add(Crud::PAGE_INDEX, Action::DETAIL)
+            ->remove(Crud::PAGE_INDEX, Action::EDIT)
+            ->remove(Crud::PAGE_DETAIL, Action::EDIT)
+            ->disable(Action::NEW);
+    }
+
 
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextEditorField::new('review'),
-
             AssociationField::new('user'),
 
             AssociationField::new('book')
@@ -34,13 +49,17 @@ class ReviewCrudController extends AbstractCrudController
                     $book->getTitle()
                 ),
 
-            IntegerField::new('score')
-                ->formatValue(fn ($value, Review $review) =>
-                    $review->getScore()
-                ),
-
             DateTimeField::new('date')
                 ->hideOnForm(),
+
+            IntegerField::new('score')
+                ->formatValue(function ($value, Review $review) {
+                        $score = $review->getScore();
+                        return '(' . $score . ') ' . str_repeat("⭐", $score);
+                    }
+                ),
+
+            TextEditorField::new('review'),
 
             BooleanField::new('visible'),
         ];

@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Author;
 use App\Entity\Book;
 use App\Entity\BookGenre;
+use App\Entity\Contact;
 use App\Entity\Emotion;
 use App\Entity\Review;
 use App\Entity\User;
@@ -59,5 +60,12 @@ class DashboardController extends AbstractDashboardController
         if ($this->isGranted(RoleConstants::ROLE_ADMIN)) {
             yield MenuItem::linkToCrud('Emotions', 'fa fa-face-smile', Emotion::class);
         }
+
+        // Contact section
+        if ($this->isGranted(RoleConstants::ROLE_ADMIN)) {
+            yield MenuItem::section('Contact');
+            yield MenuItem::linkToCrud('Contact messages', 'fa fa-envelope', Contact::class);
+        }
+
     }
 }
