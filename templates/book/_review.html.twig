@@ -1,8 +1,8 @@
 <div class="row shadow-sm rounded p-3 mb-2 bg-light">
     <div class="row">
         <div class="col-md-6">
-            <p>{{ review.emotion.emoji }}
-                Publish By
+            <p>{{ review.emotion ? review.emotion.emoji : '' }}
+                Published By
                 <a href="" class="link-info link-underline-opacity-0">
                     {{ review.user.username }}
                 </a>

@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Book;
+use App\Entity\Emotion;
 use App\Entity\Review;
 use App\Security\RoleConstants;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -58,6 +59,8 @@ class ReviewCrudController extends AbstractCrudController
                         return '(' . $score . ') ' . str_repeat("⭐", $score);
                     }
                 ),
+
+            AssociationField::new('emotion'),
 
             TextEditorField::new('review'),
 

@@ -50,7 +50,7 @@ class Emotion
 
     public function __toString(): string
     {
-        return $this->emoji;
+        return "$this->emoji ($this->label)";
     }
 
 }
