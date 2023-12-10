@@ -1,0 +1,133 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Search{% endblock %}
+
+{% block body %}
+    <div class="container w-50">
+        <div class="text-center py-5">
+            <h1 class="display-5">Explore the library</h1>
+        </div>
+        <form>
+            <div class="input-group input-group mb-3">
+                <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#filterOptions" aria-expanded="false" aria-controls="filterOptions">Filter</button>
+                <label for="search-bar" class="form-label visually-hidden">Search</label>
+                <input type="search" class="form-control" id="search-bar" name="search" value="{{ app.request.query.get('search') }}" placeholder="Search" required>
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+            <div class="collapse" id="filterOptions">
+                <div class="card card-body">
+                    <fieldset>
+                        <legend>Filter search</legend>
+                        <div class="mb-3">
+                            <label for="select-author" class="form-label">Authors</label>
+                            <select id="select-author" class="form-select" name="authors[]" multiple aria-label="Select an author">
+                                {% for author in authors %}
+                                    {% if author.id in app.request.query.all('authors') %}
+                                        <option value="{{ author.id }}" selected>{{ author.name }}</option>
+                                    {% else %}
+                                        <option value="{{ author.id }}">{{ author.name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="select-genre" class="form-label">Genre</label>
+                            <select class="form-select" id="select-genre" name="genre" aria-label="Select a genre">
+                                {% set genreid = app.request.query.get('genre') %}
+                                {% if genreid and genreid > 0 %}
+                                    <option value="0">Any</option>
+                                    {% for genre in genres %}
+                                        {% if genre.id == genreid %}
+                                            <option value="{{ genre.id }}" selected>{{ genre.label }}</option>
+                                        {% else %}
+                                            <option value="{{ genre.id }}">{{ genre.label }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    <option value="0" selected>Any</option>
+                                    {% for genre in genres %}
+                                        <option value="{{ genre.id }}">{{ genre.label }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="select-editor" class="form-label">Editor</label>
+                            <select class="form-select" id="select-editor" name="editor" aria-label="Select a editor">
+                                {% set _editor = app.request.query.get('editor') %}
+                                {% if _editor and _editor > 0 %}
+                                    <option value="0">Any</option>
+                                    {% for editor in editors %}
+                                        {% if editor == _editor %}
+                                            <option value="{{ editor }}" selected>{{ editor }}</option>
+                                        {% else %}
+                                            <option value="{{ editor }}">{{ editor }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    <option value="0" selected>Any</option>
+                                    {% for editor in editors %}
+                                        <option value="{{ editor }}">{{ editor }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                        <label class="form-label">Publication date</label>
+                        <div class="row mb-3">
+                            <div class="col input-group">
+                                <label for="date-begin" class="input-group-text">From</label>
+                                <input class="form-select" type="date" id="date-begin" name="date-begin" aria-label="Select a lower bound for the publication date" value="{{ app.request.query.get('date-begin') }}">
+                            </div>
+                            <div class="col input-group">
+                                <label for="date-end" class="input-group-text">To</label>
+                                <input class="form-select" type="date" id="date-end" name="date-end" aria-label="Select an upper bound for the publication date" value="{{ app.request.query.get('date-end') }}">
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary" type="submit">Search</button>
+                            <a class="btn btn-secondary" href="{{ path('app_search') }}">Clear</a>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </form>
+        <div>
+            <div class="row">
+                <div class="col py-3 d-flex flex-column gap-4">
+                    {% for book in books %}
+                        {% if loop.index % 2 == 1 %}
+                            <div class="card">
+                                <div class="card-body">
+                                    <h3 class="card-title"><a href="{{ path('app_book', { 'id': book.id }) }}">{{ book.title }}</a></h3>
+                                    <div class="card-subtitle d-flex gap-1">
+                                        {% for author in book.authors %}
+                                            <small>{{ author.name }}</small>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="card-text mt-2">{{ book.description|raw }}</div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="col py-3 d-flex flex-column gap-4">
+                    {% for book in books %}
+                        {% if loop.index % 2 == 0 %}
+                            <div class="card">
+                                <div class="card-body">
+                                    <h3 class="card-title"><a href="{{ path('app_book', { 'id': book.id }) }}">{{ book.title }}</a></h3>
+                                    <div class="card-subtitle d-flex gap-1">
+                                        {% for author in book.authors %}
+                                            <small>{{ author.name }}</small>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="card-text mt-2">{{ book.description|raw }}</div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
