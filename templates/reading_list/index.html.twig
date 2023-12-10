@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ user.username }}'s Reading List{% endblock %}
+
+{% block body %}
+<main class="container my-5 px-5">
+    <div class="my-5 d-flex align-items-center gap-4">
+        <h1 class="fw-bold m-0">{{ user.username }}'s Reading List</h1>
+        <a href="{{ path('app_user_profile', { 'username': user.username }) }}" class="btn btn-primary btn-lg fw-bold">Profile</a>
+    </div>
+    <div class="row row-cols-lg-2 row-cols-1 row-gap-4">
+        {{ _self.dummy_book() }}
+        {{ _self.dummy_book() }}
+        {{ _self.dummy_book() }}
+        {{ _self.dummy_book() }}
+        {{ _self.dummy_book() }}
+        {{ _self.dummy_book() }}
+        {{ _self.dummy_book() }}
+        {{ _self.dummy_book() }}
+        {{ _self.dummy_book() }}
+    </div>
+</main>
+{% endblock %}
+
+{% macro dummy_book() %}
+<div class="col">
+    <div class="card">
+        <div class="row">
+            <div class="col-4 pe-0">
+                <div class="img-thumbnail border-0 border-end rounded-0 h-100 d-flex align-items-center justify-content-center">
+                    <img class="img-fluid" src="TODO: img src please I need it so badly">
+                </div>
+            </div>
+            <div class="col">
+                <div class="card-body">
+                    <h5 class="card-title">Book title</h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">Genre</h6>
+                    <p class="card-text">★★★★★</p>
+                    <div class="d-flex gap-3">
+                        <a href="TODO: action to set status" class="btn btn-primary">Action</a>
+                        <a href="TODO: route to corresponding book page" class="btn btn-secondary">Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endmacro %}
