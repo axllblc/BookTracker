@@ -3,18 +3,88 @@
 {% block title %}Hello HomepageController!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/axllb/git/BookTracker/src/Controller/HomepageController.php'|file_link(0) }}">src/Controller/HomepageController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/axllb/git/BookTracker/templates/homepage/index.html.twig'|file_link(0) }}">templates/homepage/index.html.twig</a></code></li>
-    </ul>
-</div>
+<main>
+    <div class="bg-primary-subtle">
+        <div class="container w-50 py-5 d-flex justify-content-center">
+            <div>
+                <h1 class="display-5 fw-bold mb-4">
+                    Keep Track of<br/>
+                    Your Readings!
+                </h1>
+                <p class="fs-5 mb-4">
+                    Embark on a literary voyage with BookWatch!<br/>
+                    Your personalized book database to track, conquer, and curate your reading journey.<br/>
+                    Dive into a world of stories and take control of your reading adventure today!
+                </p>
+                <div class="d-flex gap-3">
+                    <button class="btn btn-primary" type="button">Sign Up</button>
+                    <button class="btn btn-secondary" type="button">Log In</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="container w-50 py-5">
+            <h2 class="fw-bold mb-5 text-center">
+                Check out the library!
+            </h2>
+            <div class="row mb-5 row-gap-4">
+                <div class="col-xxl-4">
+                    <div class="card p-1">
+                        <div class="card-body">
+                            <img src="TODO: Link an image" alt="Alt text of the image" width="200" height="100">
+                            <h5 class="card-title">Book title</h5>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">Genre</h6>
+                            <p class="card-text">Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.</p>
+                            <button class="btn btn-primary" type="button">Read more</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xxl-4">
+                    <div class="card p-1">
+                        <div class="card-body">
+                            <img src="TODO: Link an image" alt="Alt text of the image" width="200" height="100">
+                            <h5 class="card-title">Book title</h5>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">Genre</h6>
+                            <p class="card-text">Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.</p>
+                            <button class="btn btn-primary" type="button">Read more</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xxl-4">
+                    <div class="card p-1">
+                        <div class="card-body">
+                            <img src="TODO: Link an image" alt="Alt text of the image" width="200" height="100">
+                            <h5 class="card-title">Book title</h5>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">Genre</h6>
+                            <p class="card-text">Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.</p>
+                            <button class="btn btn-primary" type="button">Read more</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bg-secondary-subtle">
+        <div class="row py-5">
+            <div class="col d-flex flex-column align-items-center justify-content-center">
+                <div>
+                    <h2 class="display-5 fw-bold mb-4">
+                        Got a question?
+                    </h2>
+                    <p class="fs-4 mb-4">
+                        Feel free to ask us for more information!
+                    </p>
+                </div>
+            </div>
+            <div class="col m-5">
+                <div class="card me-5">
+                    <div class="card-body">
+                        {{ render(controller('App\\Controller\\ContactController::index', {})) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
 {% endblock %}
