@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Author;
 use App\Entity\Book;
+use App\Repository\AuthorRepository;
 use App\Repository\BookGenreRepository;
 use App\Repository\BookRepository;
 use App\Service\EditorService;
@@ -15,9 +17,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class SearchController extends AbstractController
 {
     #[Route('/search', name: 'app_search')]
-    public function index(Request $request, BookRepository $bookRepository, BookGenreRepository $bookGenreRepository, EditorService $editorService): Response
+    public function index(Request $request, BookRepository $bookRepository, BookGenreRepository $bookGenreRepository, AuthorRepository $authorRepository, EditorService $editorService): Response
     {
         $search = $request->query->get('search') ?? '';
+        $authors = $request->query->all('authors');
         $genre = (int)$request->query->get('genre') ?? 0;
         $editor = $request->query->get('editor') ?? '0';
         $dateBegin = $request->query->get('date-begin') ?? '';
@@ -27,6 +30,19 @@ class SearchController extends AbstractController
         if ($search !== '') {
             $books = $bookRepository->findFiltered($search);
 
+            if (count($authors) > 0) {
+                // #style  For now, this is ugly and I wish there was a better way
+                //         to present this filter.
+                $books = array_filter($books, function (Book $book) use ($authors) {
+                    foreach ($authors as $id) {
+                        $findAuthor = fn (int $_, Author $author) => $author->getId() == $id;
+                        if (!$book->getAuthors()->exists($findAuthor)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                });
+            }
             if ($genre !== 0) {
                 $books = array_filter($books, fn (Book $book) => $book->getGenre()?->getId() === $genre);
             }
@@ -46,6 +62,7 @@ class SearchController extends AbstractController
 
         return $this->render('search/index.html.twig', [
             'books' => $books,
+            'authors' => $authorRepository->findAll(),
             'genres' => $bookGenreRepository->findAll(),
             'editors' => $editorService->getEditors(),
         ]);

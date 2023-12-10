@@ -19,7 +19,16 @@
                     <fieldset>
                         <legend>Filter search</legend>
                         <div class="mb-3">
-                            <pre>TODO: author div</pre>
+                            <label for="select-author" class="form-label">Authors</label>
+                            <select id="select-author" class="form-select" name="authors[]" multiple aria-label="Select an author">
+                                {% for author in authors %}
+                                    {% if author.id in app.request.query.all('authors') %}
+                                        <option value="{{ author.id }}" selected>{{ author.name }}</option>
+                                    {% else %}
+                                        <option value="{{ author.id }}">{{ author.name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
                         </div>
                         <div class="mb-3">
                             <label for="select-genre" class="form-label">Genre</label>
