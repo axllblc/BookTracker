@@ -26,41 +26,52 @@
     <div>
         <div class="container w-50 py-5">
             <h2 class="fw-bold mb-5 text-center">
-                Check out the library!
+                Check out the Library!
             </h2>
             <div class="row mb-5 row-gap-4">
-                <div class="col-xxl-4">
-                    <div class="card p-1">
+                {% if books is null %}
+                    <div class="card py-3">
                         <div class="card-body">
-                            <img src="TODO: Link an image" alt="Alt text of the image" width="200" height="100">
-                            <h5 class="card-title">Book title</h5>
-                            <h6 class="card-subtitle mb-2 text-body-secondary">Genre</h6>
-                            <p class="card-text">Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.</p>
-                            <button class="btn btn-primary" type="button">Read more</button>
+                            {# Instead of failing hard, we just tell the user we are sorry. #}
+                            {# If $books is null, that means we don't have enough books in the database. #}
+                            {# This should not be a reachable case, but better be sorry anyway. See the controller class. #}
+                            <p class="card-text text-center">We're sorry! Some technical issues made it impossible to load this section.</p>
                         </div>
                     </div>
-                </div>
-                <div class="col-xxl-4">
-                    <div class="card p-1">
-                        <div class="card-body">
-                            <img src="TODO: Link an image" alt="Alt text of the image" width="200" height="100">
-                            <h5 class="card-title">Book title</h5>
-                            <h6 class="card-subtitle mb-2 text-body-secondary">Genre</h6>
-                            <p class="card-text">Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.</p>
-                            <button class="btn btn-primary" type="button">Read more</button>
+                {% else %}
+                    {% for book in books %}
+                        <div class="col-xxl-4">
+                            <div class="card h-100">
+                                <div class="card-body p-0 d-flex flex-column">
+                                    <div class="img-thumbnail" style="width: 100%; height: 200px;">
+                                        <img class="img-fluid" src="{{ book.coverPicture }}">
+                                    </div>
+                                    <div class="p-4 flex-grow-1 d-flex flex-column">
+                                        <h5 class="card-title">{{ book.title }}</h5>
+                                        {% if book.genre is null %}
+                                            <h6 class="card-subtitle mb-2 text-body-secondary">Genre unspecified</h6>
+                                        {% else %}
+                                            <h6 class="card-subtitle mb-2 text-body-secondary">{{ book.genre.label }}</h6>
+                                        {% endif %}
+                                        <p class="card-text mt-1">{{ book.description|slice(0, 142) }} [...]</p>
+                                        <div class="flex-grow-1"></div>
+                                        <a href="{{ path('app_book', { 'id': book.id }) }}"
+                                           class="btn btn-primary mt-1" type="button">Read more</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-xxl-4">
-                    <div class="card p-1">
-                        <div class="card-body">
-                            <img src="TODO: Link an image" alt="Alt text of the image" width="200" height="100">
-                            <h5 class="card-title">Book title</h5>
-                            <h6 class="card-subtitle mb-2 text-body-secondary">Genre</h6>
-                            <p class="card-text">Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.</p>
-                            <button class="btn btn-primary" type="button">Read more</button>
-                        </div>
-                    </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="py-3">
+                <h2 class="fw-bold mb-5 text-center">
+                    What are you waiting?
+                </h2>
+                <div class="d-flex flex-column align-items-center">
+                    <p class="fs-5 mb-4 text-center">You may as well look some books for yourself!</p>
+                    <a href="{{ path('app_search') }}"
+                       class="btn btn-primary mt-1 d-block" type="button">Search in the Library</a>
                 </div>
             </div>
         </div>
