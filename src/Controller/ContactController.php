@@ -54,7 +54,7 @@ class ContactController extends AbstractController
 
             $this->addFlash(
                 'sucess',
-                'Votre message a été envoyé !'
+                'Your message has been sent !'
             );
 
             return $this->redirectToRoute('contact.index');

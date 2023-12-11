@@ -61,6 +61,13 @@ class BookController extends AbstractController
         return $this->redirectToRoute('app_book', [ 'id' => $book->getId() ], Response::HTTP_SEE_OTHER);
     }
 
+    #[Route('/book/{id}/pause', name: 'app_book_pause', methods: ['GET'])]
+    public function pauseReview(Book $book, ReadService $readService): Response
+    {
+        $readService->changeState($book, ReadingStatusEnum::Pause);
+        return $this->redirectToRoute('app_book', [ 'id' => $book->getId() ], Response::HTTP_SEE_OTHER);
+    }
+
     #[Route('/book/{id}/reading', name: 'app_book_reading', methods: ['GET'])]
     public function reading(Book $book, ReadService $readService): Response
     {

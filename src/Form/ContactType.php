@@ -25,7 +25,7 @@ class ContactType extends AbstractType
                     'minlenght' => '2',
                     'maxlength' => '50',
                 ],
-                'label' => 'Nom d\'utilisateur',
+                'label' => 'Username',
                 'label_attr' => [
                     'class' => 'form-label mt-4'
                 ]
@@ -36,7 +36,7 @@ class ContactType extends AbstractType
                     'minlenght' => '2',
                     'maxlength' => '180',
                 ],
-                'label' => 'Adresse email',
+                'label' => 'Mail adress',
                 'label_attr' => [
                     'class' => 'form-label mt-4'
                 ],
@@ -52,7 +52,7 @@ class ContactType extends AbstractType
                     'minlenght' => '2',
                     'maxlength' => '100',
                 ],
-                'label' => 'Sujet',
+                'label' => 'Subject',
                 'label_attr' => [
                     'class' => 'form-label mt-4'
                 ],
@@ -76,7 +76,7 @@ class ContactType extends AbstractType
                 'attr' => [
                     'class' => 'btn btn-primary mt-4'
                 ],
-                'label' => 'Envoyer le message'
+                'label' => 'Send message'
             ]);
     }
 

@@ -26,7 +26,7 @@ class ReadingStatusRepository extends ServiceEntityRepository
     /**
      * @throws NonUniqueResultException
      */
-    public function findByStatus(ReadingStatusEnum $status): ReadingStatus
+    public function findByStatus(ReadingStatusEnum $status): ?ReadingStatus
     {
         return $this->createQueryBuilder('rs')
             ->andWhere('rs.status = :status')
