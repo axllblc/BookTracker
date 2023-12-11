@@ -3,7 +3,7 @@
         <div class="col-md-6">
             <p>{{ review.emotion ? review.emotion.emoji : '' }}
                 Published By
-                <a href="" class="link-info link-underline-opacity-0">
+                <a href="{{ path('app_user_profile', {'username': review.user.username }) }}" class="link-info link-underline-opacity-0">
                     {{ review.user.username }}
                 </a>
                 <span>On {{ review.date | date("m/d/Y") }}</span>
