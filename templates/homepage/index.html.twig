@@ -91,11 +91,11 @@
                     </p>
                 </div>
             </div>
-            <div class="col m-5">
-                <div class="card me-5">
-                    <div class="card-body">
-                        {{ render(controller('App\\Controller\\ContactController::index', {})) }}
-                    </div>
+            <div class="col me-5">
+                <div class="m-5">
+                    <a href="{{ path('contact.index') }}"
+                       class="btn btn-primary btn-lg d-block py-4 fs-1
+                              d-flex align-items-center justify-content-center">Contact us</a>
                 </div>
             </div>
         </div>
