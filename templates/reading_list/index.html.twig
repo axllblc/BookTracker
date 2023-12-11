@@ -4,21 +4,51 @@
 
 {% block body %}
 <main class="container my-5 px-5">
-    <div class="my-5 d-flex align-items-center gap-4">
-        <h1 class="fw-bold m-0">{{ user.username }}'s Reading List</h1>
-        <a href="{{ path('app_user_profile', { 'username': user.username }) }}" class="btn btn-primary btn-lg fw-bold">Profile</a>
-    </div>
-    <div class="row row-cols-lg-2 row-cols-1 row-gap-4">
-        {% for bookWithReview in booksWithReview %}
-            {{ _self.display_book_card(bookWithReview) }}
-        {% endfor %}
-    </div>
+    {% if user.username == app.user.username %}
+        {% if user.blocked %}
+            <div class="alert alert-warning" role="alert">
+                Your account is blocked and not visible.
+            </div>
+        {% elseif not user.public %}
+            <div class="alert alert-info" role="alert">
+                Your reading list is not public.
+            </div>
+        {% endif %}
+        {{ _self.reading_list(user, booksReviewsReadsTuples) }}
+
+    {% elseif user.blocked %}
+        <div class="alert alert-warning" role="alert">
+            This reading list belongs to a blocked user.
+        </div>
+
+    {% elseif not user.public %}
+        <div class="alert alert-info text-align" role="alert">
+            This reading list was not made public by its owner.
+        </div>
+        <a href="{{ path('app_search') }}" class="btn btn-primary my-2">Return to search page</a>
+
+    {% else %}
+        {{ _self.reading_list(user, booksReviewsReadsTuples) }}
+    {% endif %}
 </main>
 {% endblock %}
 
-{% macro display_book_card(bookWithReview) %}
-{% set book = bookWithReview[0] %}
-{% set review = bookWithReview[1] %}
+{% macro reading_list(user, booksReviewsReadsTuples) %}
+<div class="my-5 d-flex align-items-center gap-4">
+    <h1 class="fw-bold m-0">{{ user.username }}'s Reading List</h1>
+    <a href="{{ path('app_user_profile', { 'username': user.username }) }}" class="btn btn-primary btn-lg fw-bold">Profile</a>
+</div>
+<div class="row row-cols-lg-2 row-cols-1 row-gap-4">
+    {% for tuple in booksReviewsReadsTuples %}
+        {{ _self.display_book_card(user, tuple) }}
+    {% endfor %}
+</div>
+{% endmacro %}
+
+{% macro display_book_card(user, booksReviewsReadsTuple) %}
+{% set book = booksReviewsReadsTuple[0] %}
+{% set review = booksReviewsReadsTuple[1] %}
+{% set read = booksReviewsReadsTuple[2] %}
 <div class="col">
     <div class="card">
         <div class="row">
@@ -29,15 +59,38 @@
             </div>
             <div class="col">
                 <div class="card-body">
-                    <h5 class="card-title align-middle">{{ book.title }} <span class="ms-1">{{ review.emotion }}</span></h5>
+                    {% if review is null %}
+                        <h5 class="card-title align-middle">{{ book.title }}</h5>
+                    {% else %}
+                        <h5 class="card-title align-middle">{{ book.title }} <span class="ms-1">{{ review.emotion }}</span></h5>
+                    {% endif %}
+
                     <h6 class="card-subtitle mb-2 text-body-secondary">{{ book.genre ?? 'Unspecified genre' }}</h6>
+
                     {% if review is null %}
                         <p class="card-text">Score: Not reviewed yet</p>
                     {% else %}
                         <p class="card-text">Score: {{ review.score }}</p>
                     {% endif %}
+
                     <div class="d-flex gap-3">
-                        <a href="TODO: action to set status" class="btn btn-primary">Action</a>
+                        <div class="dropdown">
+                            <a class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" >
+                                {{ read.status.status.value }}
+                            </a>
+                            <ul class="dropdown-menu w-50">
+                                <li><a class="dropdown-item text-center"
+                                       href="{{ path('app_reading_list_reading', { 'username': user.username, 'id': book.id } ) }}">Reading</a></li>
+                                <li><a class="dropdown-item text-center"
+                                       href="{{ path('app_reading_list_completed', { 'username': user.username, 'id': book.id } ) }}">Completed</a></li>
+                                <li><a class="dropdown-item text-center"
+                                       href="{{ path('app_reading_list_drop', { 'username': user.username, 'id': book.id } ) }}">Drop</a></li>
+                                <li><a class="dropdown-item text-center"
+                                       href="{{ path('app_reading_list_plan_to_read', { 'username': user.username, 'id': book.id } ) }}">Plan to Read</a></li>
+                                <li><a class="dropdown-item bg-danger text-center"
+                                       href="{{ path('app_reading_list_remove', { 'username': user.username, 'id': book.id } ) }}">Remove</a></li>
+                            </ul>
+                        </div>
                         <a href="{{ path('app_book', { 'id': book.id }) }}" class="btn btn-secondary">Details</a>
                     </div>
                 </div>
