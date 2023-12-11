@@ -48,8 +48,7 @@
             <h1 class="h2">{{ user.username }}</h1>
         </div>
         <div>
-            {# TODO: Set this href attribute to the reading list route. Right now, it is pointing to the wrong one. #}
-            <small><a class="text-decoration-none btn btn-link" href="{{ path('app_user_profile', {'username': user.username}) }}">Reading list</a></small>
+            <small><a class="text-decoration-none btn btn-link" href="{{ path('app_reading_list', {'username': user.username}) }}">Reading list</a></small>
         </div>
         {% if user.username == app.user.username %}
             <div>
