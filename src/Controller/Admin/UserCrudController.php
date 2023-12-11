@@ -5,6 +5,8 @@ namespace App\Controller\Admin;
 use App\Entity\User;
 use App\Security\RoleConstants;
 use Closure;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
@@ -38,6 +40,12 @@ class UserCrudController extends AbstractCrudController
     {
         return User::class;
     }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions->disable(Action::BATCH_DELETE);
+    }
+
 
     public function configureFields(string $pageName): iterable
     {
@@ -124,9 +132,6 @@ class UserCrudController extends AbstractCrudController
             $userEntity = $form->getData();
             $plainPassword = $form->get('plainPassword')->getData();
 
-            if (!$userEntity->isPasswordSet())
-                throw new Exception('A user must have a password');
-
             if (!is_null($plainPassword))
                 $userEntity->setPassword(
                     $this->userPasswordHasher->hashPassword(
@@ -134,6 +139,9 @@ class UserCrudController extends AbstractCrudController
                         $plainPassword
                     )
                 );
+
+            if (!$userEntity->isPasswordSet())
+                throw new Exception('A user must have a password');
         };
     }
 
