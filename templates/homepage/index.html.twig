@@ -17,8 +17,13 @@
                     Dive into a world of stories and take control of your reading adventure today!
                 </p>
                 <div class="d-flex gap-3">
-                    <a href="{{ path('app_register') }}" class="btn btn-primary">Sign Up</a>
-                    <a href="{{ path('app_login') }}" class="btn btn-secondary">Log In</a>
+                    {% if app.user %}
+                        <a href="{{ path('app_search') }}" class="btn btn-primary">Search Books</a>
+                        <a href="{{ path('app_reading_list', { 'username': app.user.username }) }}" class="btn btn-secondary">My Reading List</a>
+                    {% else %}
+                        <a href="{{ path('app_register') }}" class="btn btn-primary">Sign Up</a>
+                        <a href="{{ path('app_login') }}" class="btn btn-secondary">Log In</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
