@@ -104,7 +104,7 @@
                                             <small>{{ author.name }}</small>
                                         {% endfor %}
                                     </div>
-                                    <div class="card-text mt-2">{{ book.description|raw }}</div>
+                                    <div class="card-text mt-2">{{ book.description|striptags('')|slice(0, 142) }} [...]</div>
                                 </div>
                             </div>
                         {% endif %}
@@ -121,7 +121,7 @@
                                             <small>{{ author.name }}</small>
                                         {% endfor %}
                                     </div>
-                                    <div class="card-text mt-2">{{ book.description|raw }}</div>
+                                    <div class="card-text mt-2">{{ book.description|striptags('')|slice(0, 142) }} [...]</div>
                                 </div>
                             </div>
                         {% endif %}
